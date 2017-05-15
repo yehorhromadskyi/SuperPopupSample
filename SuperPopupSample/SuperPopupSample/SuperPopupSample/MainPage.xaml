@@ -3,9 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SuperPopupSample"
              x:Class="SuperPopupSample.MainPage">
+    <Grid>
+        <Button Text="Click"
+                WidthRequest="120"
+                HeightRequest="80"
+                VerticalOptions="Start"
+                HorizontalOptions="Start"
+                Clicked="Button_Clicked"/>
 
-	<Label Text="Welcome to Xamarin Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
-
+        <local:SuperPopup x:Name="PopupView">
+            <Grid BackgroundColor="Green">
+                <Label Text="Alloha"/>
+            </Grid>
+        </local:SuperPopup>
+    </Grid>
 </ContentPage>
