@@ -60,6 +60,11 @@ namespace SuperPopupSample
             IsVisible = false;
             _rootLayout = new AbsoluteLayout();
 
+            _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
+            {
+                Command = new Command(ClickOutsidePopupContent)
+            });
+
             AbsoluteLayout.SetLayoutFlags(view, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.XProportional);
             AbsoluteLayout.SetLayoutBounds(view, new Rectangle(1, 100, 0.5, 0.5));
 
@@ -68,9 +73,24 @@ namespace SuperPopupSample
             Content = _rootLayout;
         }
 
-        void OnIsOpenedChanged(bool isOpen)
+        void ClickOutsidePopupContent()
         {
-            IsVisible = isOpen;
+            IsOpen = false;
+        }
+
+        async void OnIsOpenedChanged(bool isOpen)
+        {
+            if (isOpen)
+            {
+                IsVisible = true;
+                PopupContent.Scale = 0.05;
+                await PopupContent.ScaleTo(1, 100, Easing.CubicOut);
+            }
+            else
+            {
+                await PopupContent.ScaleTo(0.05, 100, Easing.CubicOut);
+                IsVisible = false;
+            }
         }
     }
 }

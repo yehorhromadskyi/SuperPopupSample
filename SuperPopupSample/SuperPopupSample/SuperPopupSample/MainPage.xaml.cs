@@ -16,7 +16,7 @@ namespace SuperPopupSample
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            PopupView.IsOpen = !PopupView.IsOpen;
+            PopupView.IsOpen = true;
         }
     }
 }

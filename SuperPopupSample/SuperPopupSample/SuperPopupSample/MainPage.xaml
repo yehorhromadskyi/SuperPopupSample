@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:SuperPopupSample"
              x:Class="SuperPopupSample.MainPage">
     <Grid>
-        <Button Text="Click"
+        <Button Text="Show"
                 WidthRequest="120"
                 HeightRequest="80"
                 VerticalOptions="Start"
@@ -13,7 +13,7 @@
 
         <local:SuperPopup x:Name="PopupView">
             <Grid BackgroundColor="Green">
-                <Label Text="Alloha"/>
+                <Label Text="Popup"/>
             </Grid>
         </local:SuperPopup>
     </Grid>
