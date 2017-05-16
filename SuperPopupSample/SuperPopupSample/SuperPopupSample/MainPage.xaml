@@ -12,9 +12,10 @@
                 local:Gestures.TappedCommand="{Binding TapCommand}"/>
 
         <local:SuperPopup x:Name="PopupView">
-            <Grid BackgroundColor="Green">
+            <Frame HasShadow="True"
+                   BackgroundColor="White">
                 <Label Text="Popup"/>
-            </Grid>
+            </Frame>
         </local:SuperPopup>
     </Grid>
 </ContentPage>
