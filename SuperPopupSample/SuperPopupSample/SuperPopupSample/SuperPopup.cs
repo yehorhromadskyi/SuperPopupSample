@@ -11,6 +11,7 @@ namespace SuperPopupSample
     public class SuperPopup : ContentView
     {
         AbsoluteLayout _rootLayout;
+        View _view;
 
         public static readonly BindableProperty PopupContentProperty =
             BindableProperty.Create(nameof(PopupContent),
@@ -59,37 +60,49 @@ namespace SuperPopupSample
         {
             IsVisible = false;
             _rootLayout = new AbsoluteLayout();
+            _view = view;
 
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
             {
                 Command = new Command(ClickOutsidePopupContent)
             });
 
-            AbsoluteLayout.SetLayoutFlags(view, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.XProportional);
-            AbsoluteLayout.SetLayoutBounds(view, new Rectangle(1, 100, 0.5, 0.5));
-
             _rootLayout.Children.Add(view);
 
             Content = _rootLayout;
         }
 
-        void ClickOutsidePopupContent()
+        async void ClickOutsidePopupContent()
         {
-            IsOpen = false;
+            await HideAsync();
         }
 
-        async void OnIsOpenedChanged(bool isOpen)
+        public async Task ShowAsync(Point location)
+        {
+            AbsoluteLayout.SetLayoutFlags(_view, AbsoluteLayoutFlags.SizeProportional);
+            AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(location.X, location.Y, 0.5, 0.5));
+
+            PopupContent.Scale = 0;
+            IsVisible = true;
+            await PopupContent.ScaleTo(1, 100, Easing.CubicOut);
+        }
+
+        public async Task HideAsync()
+        {
+            await PopupContent.ScaleTo(0, 100, Easing.CubicOut);
+            IsVisible = false;
+            PopupContent.Scale = 1;
+        }
+
+        void OnIsOpenedChanged(bool isOpen)
         {
             if (isOpen)
             {
-                IsVisible = true;
-                PopupContent.Scale = 0.05;
-                await PopupContent.ScaleTo(1, 100, Easing.CubicOut);
+                
             }
             else
             {
-                await PopupContent.ScaleTo(0.05, 100, Easing.CubicOut);
-                IsVisible = false;
+                
             }
         }
     }

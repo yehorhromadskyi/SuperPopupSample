@@ -9,7 +9,7 @@
                 HeightRequest="80"
                 VerticalOptions="Start"
                 HorizontalOptions="Start"
-                Clicked="Button_Clicked"/>
+                local:Gestures.TappedCommand="{Binding TapCommand}"/>
 
         <local:SuperPopup x:Name="PopupView">
             <Grid BackgroundColor="Green">
