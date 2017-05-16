@@ -5,10 +5,8 @@
              x:Class="SuperPopupSample.MainPage">
     <Grid>
         <Button Text="Show"
-                WidthRequest="120"
                 HeightRequest="80"
                 VerticalOptions="Start"
-                HorizontalOptions="Start"
                 local:Gestures.TappedCommand="{Binding TapCommand}"/>
 
         <local:SuperPopup x:Name="PopupView">
