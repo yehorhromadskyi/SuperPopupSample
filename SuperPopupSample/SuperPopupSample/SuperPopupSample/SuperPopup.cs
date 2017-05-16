@@ -67,9 +67,19 @@ namespace SuperPopupSample
                 Command = new Command(ClickOutsidePopupContent)
             });
 
+            view.GestureRecognizers.Add(new TapGestureRecognizer
+            {
+                Command = new Command(ClickOnPopupContent)
+            });
+
             _rootLayout.Children.Add(view);
 
             Content = _rootLayout;
+        }
+
+        void ClickOnPopupContent()
+        {
+            // ignoring
         }
 
         async void ClickOutsidePopupContent()
@@ -84,12 +94,12 @@ namespace SuperPopupSample
 
             PopupContent.Scale = 0;
             IsVisible = true;
-            await PopupContent.ScaleTo(1, 100, Easing.CubicOut);
+            await PopupContent.ScaleTo(1, 100);
         }
 
         public async Task HideAsync()
         {
-            await PopupContent.ScaleTo(0, 100, Easing.CubicOut);
+            await PopupContent.ScaleTo(0, 100);
             IsVisible = false;
             PopupContent.Scale = 1;
         }
