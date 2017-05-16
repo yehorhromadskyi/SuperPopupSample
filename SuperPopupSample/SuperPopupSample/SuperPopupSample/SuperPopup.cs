@@ -59,7 +59,8 @@ namespace SuperPopupSample
         void Update(View view)
         {
             IsVisible = false;
-            _rootLayout = new AbsoluteLayout();
+            // Note that UWP will not handle tap on AbsoluteLayout if remove Background
+            _rootLayout = new AbsoluteLayout() { BackgroundColor = Color.Transparent };
             _view = view;
 
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
@@ -79,7 +80,7 @@ namespace SuperPopupSample
 
         void ClickOnPopupContent()
         {
-            // ignoring
+            // Ignoring required for iOS to prevent ClickOutsidePopupContent from calling.
         }
 
         async void ClickOutsidePopupContent()
