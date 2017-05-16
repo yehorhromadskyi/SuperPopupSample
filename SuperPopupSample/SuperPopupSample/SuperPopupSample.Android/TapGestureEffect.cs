@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+﻿using Android.Content;
 using Android.Views;
-using Android.Widget;
-using Xamarin.Forms;
 using SuperPopupSample.Droid;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using Android.Support.V4.View;
 
 [assembly: ResolutionGroupName("SuperForms")]
 [assembly: ExportEffect(typeof(TapGestureEffect), nameof(TapGestureEffect))]
