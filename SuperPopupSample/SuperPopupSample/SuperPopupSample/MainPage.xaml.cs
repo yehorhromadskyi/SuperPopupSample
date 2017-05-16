@@ -23,7 +23,7 @@ namespace SuperPopupSample
         {
             if (obj is Point location)
             {
-                await PopupView.ShowAsync();
+                await PopupView.ShowAsync(location, new Size(240, 120));
             }
         }
     }
