@@ -23,13 +23,8 @@ namespace SuperPopupSample
         {
             if (obj is Point location)
             {
-                await PopupView.ShowAsync(location);
+                await PopupView.ShowAsync();
             }
-        }
-
-        private void Button_Clicked(object sender, EventArgs e)
-        {
-            PopupView.IsOpen = true;
         }
     }
 }
