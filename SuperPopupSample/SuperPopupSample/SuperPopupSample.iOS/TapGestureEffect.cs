@@ -13,12 +13,13 @@ namespace SuperPopupSample.iOS
 
         protected override void OnAttached()
         {
-            _tapRecognizer = new UITapGestureRecognizer(r =>
+            _tapRecognizer = new UITapGestureRecognizer(recognizer =>
             {
                 var command = Gestures.GetTappedCommand(Element);
                 if (command != null)
                 {
-                    var cgPoint = r.LocationInView(Control);
+                    // Passing null to detect absolute location on UIScreen
+                    var cgPoint = recognizer.LocationInView(null);
                     var point = new Point(cgPoint.X, cgPoint.Y);
 
                     if (command.CanExecute(point))
