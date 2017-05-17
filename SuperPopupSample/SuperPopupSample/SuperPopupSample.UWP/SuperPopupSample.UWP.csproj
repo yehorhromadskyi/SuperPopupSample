@@ -129,7 +129,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SuperPopupSample\SuperPopupSample\SuperPopupSample.csproj">
+    <ProjectReference Include="..\SuperPopupSample\SuperPopupSample.csproj">
       <Project>{c79d6d93-c2c5-4456-98f0-84543faca4d9}</Project>
       <Name>SuperPopupSample</Name>
     </ProjectReference>
