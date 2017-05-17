@@ -24,7 +24,10 @@ namespace SuperPopupSample.UWP
             if (command != null)
             {
                 var foundationPoint = e.GetPosition(Control);
-                var point = new Point(foundationPoint.X, foundationPoint.Y);
+                var positionOnTheScreen = (Control as Windows.UI.Xaml.UIElement)
+                    .TransformToVisual(Windows.UI.Xaml.Window.Current.Content)
+                    .TransformPoint(foundationPoint);
+                var point = new Point(positionOnTheScreen.X, positionOnTheScreen.Y);
 
                 if (command.CanExecute(point))
                 {

@@ -1,4 +1,5 @@
-﻿using Android.Content;
+﻿using Android.App;
+using Android.Content;
 using Android.Views;
 using SuperPopupSample.Droid;
 using Xamarin.Forms;
@@ -31,24 +32,20 @@ namespace SuperPopupSample.Droid
                 var command = Gestures.GetTappedCommand(Element);
                 if (command != null)
                 {
-                    var x = e.Event.GetX();
-                    var y = e.Event.GetY();
+                    var statusBarHeight = Helpers.GetStatusBarHeight(_context);
 
-                    var convertedPoint = PxToDp(new Point(x, y), _context.Resources.DisplayMetrics);
+                    int[] coordinates = new int[2];
+                    Control.GetLocationOnScreen(coordinates);
+                    var x = e.Event.GetX() + coordinates[0];
+                    var y = e.Event.GetY() + coordinates[1] - statusBarHeight;
+
+                    var convertedPoint = Helpers.PxToDp(new Point(x, y), _context.Resources.DisplayMetrics);
                     if (command.CanExecute(convertedPoint))
                     {
                         command.Execute(convertedPoint);
                     }
                 }
             }
-        }
-
-        Point PxToDp(Point point, Android.Util.DisplayMetrics displayMetrics)
-        {
-            point.X = point.X / displayMetrics.Density;
-            point.Y = point.Y / displayMetrics.Density;
-
-            return point;
         }
     }
 }

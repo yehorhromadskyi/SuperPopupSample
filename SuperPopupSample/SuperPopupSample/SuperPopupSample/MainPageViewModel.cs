@@ -15,7 +15,7 @@ namespace SuperPopupSample
             ShowPopup2Command = new Command(ExecuteShowPopup2Command);
         }
         
-        private async void ExecuteShowPopup1Command(object obj)
+        private async void ExecuteShowPopup1Command()
         {
             var popup = PopupService.Resolve(PopupType.Popup1);
             if (popup != null)
@@ -24,7 +24,7 @@ namespace SuperPopupSample
             }
         }
 
-        private async void ExecuteShowPopup2Command(object obj)
+        private async void ExecuteShowPopup2Command()
         {
             var popup = PopupService.Resolve(PopupType.Popup2);
             if (popup != null)

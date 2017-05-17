@@ -2,19 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SuperPopupSample"
-             x:Class="SuperPopupSample.MainPage">
+             x:Class="SuperPopupSample.MainPage"
+             x:Name="Page">
     <Grid>
         <StackLayout Orientation="Horizontal"
                      VerticalOptions="Start">
             <Button Text="Show Popup1"
                     HeightRequest="80"
                     HorizontalOptions="Start"
-                    local:Gestures.TappedCommand="{Binding ShowPopup1Command}"/>
+                    local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}"/>
 
             <Button Text="Show Popup2"
                     HeightRequest="80"
                     HorizontalOptions="EndAndExpand"
-                    local:Gestures.TappedCommand="{Binding ShowPopup2Command}"/>
+                    local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>
         </StackLayout>
 
         <local:SuperPopup x:Name="PopupView1">

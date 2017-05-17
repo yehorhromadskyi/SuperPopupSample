@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SuperPopupSample
@@ -16,31 +17,61 @@ namespace SuperPopupSample
                                     default(View),
                                     propertyChanged: OnPopupContentPropertyChanged);
 
+        public static readonly BindableProperty LocationProperty =
+            BindableProperty.Create(nameof(Location),
+                                    typeof(Point),
+                                    typeof(SuperPopup),
+                                    default(Point),
+                                    propertyChanged: OnLocationPropertyChanged);
+
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
             set { SetValue(PopupContentProperty, value); }
         }
 
+        public Point Location
+        {
+            get { return (Point)GetValue(LocationProperty); }
+            set { SetValue(LocationProperty, value); }
+        }
+
+
         public SuperPopup()
         {
         }
 
-        private static void OnPopupContentPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        public async Task ShowAsync()
+        {
+            PopupContent.Scale = 0;
+            IsVisible = true;
+            await PopupContent.ScaleTo(1, 100);
+        }
+
+        public async Task HideAsync()
+        {
+            await PopupContent.ScaleTo(0, 100);
+            IsVisible = false;
+            PopupContent.Scale = 1;
+        }
+
+        static void OnPopupContentPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (newValue is View view)
             {
                 var popup = bindable as SuperPopup;
-                popup.Update(view);
+                popup.UpdateContent(view);
             }
         }
 
-        void Update(View view)
+        void UpdateContent(View view)
         {
             IsVisible = false;
             // Note that UWP will not handle tap on AbsoluteLayout if remove Background
             _rootLayout = new AbsoluteLayout() { BackgroundColor = Color.Transparent };
             _view = view;
+
+            AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(Location.X, Location.Y, _view.Width, _view.Height));
 
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
             {
@@ -67,18 +98,21 @@ namespace SuperPopupSample
             await HideAsync();
         }
 
-        public async Task ShowAsync()
+        static void OnLocationPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            PopupContent.Scale = 0;
-            IsVisible = true;
-            await PopupContent.ScaleTo(1, 100);
+            if (newValue is Point location)
+            {
+                var popup = bindable as SuperPopup;
+                popup.UpdateLocation(location);
+            }
         }
 
-        public async Task HideAsync()
+        void UpdateLocation(Point location)
         {
-            await PopupContent.ScaleTo(0, 100);
-            IsVisible = false;
-            PopupContent.Scale = 1;
+            if (_view != null)
+            {
+                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(location.X, location.Y, _view.Width, _view.Height));
+            }
         }
     }
 }
