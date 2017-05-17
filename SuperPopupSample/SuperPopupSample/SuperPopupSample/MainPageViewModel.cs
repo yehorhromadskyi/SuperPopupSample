@@ -1,41 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace SuperPopupSample
 {
     public sealed class MainPageViewModel : BindableObject
     {
-        public ICommand TapCommand { get; set; }
+        public ICommand ShowPopup1Command { get; set; }
 
-        private bool _isPopupOpen;
-        public bool IsPopupOpen
-        {
-            get { return _isPopupOpen; }
-            set
-            {
-                _isPopupOpen = value;
-                OnPropertyChanged();
-            }
-        }
+        public ICommand ShowPopup2Command { get; set; }
 
         public MainPageViewModel()
         {
-            TapCommand = new Command(ExecuteTapCommand);
+            ShowPopup1Command = new Command(ExecuteShowPopup1Command);
+            ShowPopup2Command = new Command(ExecuteShowPopup2Command);
+        }
+        
+        private async void ExecuteShowPopup1Command(object obj)
+        {
+            var popup = PopupService.Resolve(PopupType.Popup1);
+            if (popup != null)
+            {
+                await popup.ShowAsync();
+            }
         }
 
-        private void ExecuteTapCommand(object obj)
+        private async void ExecuteShowPopup2Command(object obj)
         {
-            IsPopupOpen = true;
-
-            //if (obj is Point location)
-            //{
-            //    await PopupView.ShowAsync(location, new Size(240, 120));
-            //}
+            var popup = PopupService.Resolve(PopupType.Popup2);
+            if (popup != null)
+            {
+                await popup.ShowAsync();
+            }
         }
     }
 }

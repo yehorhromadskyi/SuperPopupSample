@@ -16,6 +16,9 @@ namespace SuperPopupSample
 
             var vm = new MainPageViewModel();
             BindingContext = vm;
+
+            PopupService.Register(PopupType.Popup1, PopupView1);
+            PopupService.Register(PopupType.Popup2, PopupView2);
         }
     }
 }

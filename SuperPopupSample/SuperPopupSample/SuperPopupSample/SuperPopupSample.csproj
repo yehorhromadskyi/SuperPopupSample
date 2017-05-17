@@ -39,10 +39,13 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gestures.cs" />
+    <Compile Include="IPopup.cs" />
+    <Compile Include="PopupService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPageViewModel.cs" />
+    <Compile Include="PopupType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuperPopup.cs" />
   </ItemGroup>

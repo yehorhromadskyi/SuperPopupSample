@@ -4,16 +4,30 @@
              xmlns:local="clr-namespace:SuperPopupSample"
              x:Class="SuperPopupSample.MainPage">
     <Grid>
-        <Button Text="Show"
-                HeightRequest="80"
-                VerticalOptions="Start"
-                local:Gestures.TappedCommand="{Binding TapCommand}"/>
+        <StackLayout Orientation="Horizontal"
+                     VerticalOptions="Start">
+            <Button Text="Show Popup1"
+                    HeightRequest="80"
+                    HorizontalOptions="Start"
+                    local:Gestures.TappedCommand="{Binding ShowPopup1Command}"/>
 
-        <local:SuperPopup x:Name="PopupView"
-                          IsOpen="{Binding IsPopupOpen, Mode=TwoWay}">
+            <Button Text="Show Popup2"
+                    HeightRequest="80"
+                    HorizontalOptions="EndAndExpand"
+                    local:Gestures.TappedCommand="{Binding ShowPopup2Command}"/>
+        </StackLayout>
+
+        <local:SuperPopup x:Name="PopupView1">
             <Frame HasShadow="True"
                    BackgroundColor="White">
-                <Label Text="Popup"/>
+                <Label Text="Popup 1"/>
+            </Frame>
+        </local:SuperPopup>
+
+        <local:SuperPopup x:Name="PopupView2">
+            <Frame HasShadow="True"
+                   BackgroundColor="White">
+                <Label Text="Popup 2"/>
             </Frame>
         </local:SuperPopup>
     </Grid>
