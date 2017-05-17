@@ -20,11 +20,28 @@ namespace SuperPopupSample
                                     default(View),
                                     propertyChanged: OnPopupContentPropertyChanged);
 
+        public static readonly BindableProperty IsOpenProperty =
+            BindableProperty.Create(nameof(IsOpen),
+                                    typeof(bool),
+                                    typeof(SuperPopup),
+                                    default(bool),
+                                    propertyChanged: (view, _, isOpen) =>
+                                    {
+                                        ((SuperPopup)view).OnIsOpenPropertyChanged((bool)isOpen);
+                                    });
+
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
             set { SetValue(PopupContentProperty, value); }
         }
+
+        public bool IsOpen
+        {
+            get { return (bool)GetValue(IsOpenProperty); }
+            set { SetValue(IsOpenProperty, value); }
+        }
+
 
         public SuperPopup()
         {
@@ -36,6 +53,18 @@ namespace SuperPopupSample
             {
                 var popup = bindable as SuperPopup;
                 popup.Update(view);
+            }
+        }
+
+        async void OnIsOpenPropertyChanged(bool isOpen)
+        {
+            if (isOpen)
+            {
+                await ShowAsync();
+            }
+            else
+            {
+                await HideAsync();
             }
         }
 
@@ -66,9 +95,9 @@ namespace SuperPopupSample
             // Ignoring required for iOS to prevent ClickOutsidePopupContent from calling.
         }
 
-        async void ClickOutsidePopupContent()
+        void ClickOutsidePopupContent()
         {
-            await HideAsync();
+            IsOpen = false;
         }
 
         public async Task ShowAsync()

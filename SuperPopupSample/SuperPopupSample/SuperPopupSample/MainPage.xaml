@@ -9,7 +9,8 @@
                 VerticalOptions="Start"
                 local:Gestures.TappedCommand="{Binding TapCommand}"/>
 
-        <local:SuperPopup x:Name="PopupView">
+        <local:SuperPopup x:Name="PopupView"
+                          IsOpen="{Binding IsPopupOpen, Mode=TwoWay}">
             <Frame HasShadow="True"
                    BackgroundColor="White">
                 <Label Text="Popup"/>
