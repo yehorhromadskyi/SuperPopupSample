@@ -69,9 +69,7 @@ namespace SuperPopupSample
             // Note that UWP will not handle tap on AbsoluteLayout if remove Background
             _rootLayout = new AbsoluteLayout() { BackgroundColor = Color.Transparent };
             _view = view;
-
-            AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(Location.X, Location.Y, _view.Width, _view.Height));
-
+            
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
             {
                 Command = new Command(ClickOutsidePopupContent)
@@ -82,8 +80,9 @@ namespace SuperPopupSample
                 Command = new Command(ClickOnPopupContent)
             });
 
-            _rootLayout.Children.Add(view);
+            UpdateLocation(Location);
 
+            _rootLayout.Children.Add(view);
             Content = _rootLayout;
         }
 
