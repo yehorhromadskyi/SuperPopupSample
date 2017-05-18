@@ -10,7 +10,8 @@
                      BackgroundColor="Yellow"
                      local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}">
             <Grid BackgroundColor="Red"
-                  HeightRequest="80">
+                  HeightRequest="80"
+                  local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">
                 <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">-->
                 <Label Text="Show Popup 1"
                        VerticalTextAlignment="Center"
@@ -23,8 +24,31 @@
             <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}"/>-->
 
             <Button Text="Show Popup2"
-                    HeightRequest="80"/>
-            <!--local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>-->
+                    HeightRequest="80"
+                    local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal"
+                     VerticalOptions="End"
+                     BackgroundColor="Yellow"
+                     local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}">
+            <Grid BackgroundColor="Red"
+                  HeightRequest="80"
+                  local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">
+                <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">-->
+                <Label Text="Show Popup 1"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"/>
+            </Grid>
+
+            <Label Text="Show Popup 1"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"/>
+            <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}"/>-->
+
+            <Button Text="Show Popup2"
+                    HeightRequest="80"
+                    local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>
         </StackLayout>
 
         <local:SuperPopup x:Name="PopupView1">
