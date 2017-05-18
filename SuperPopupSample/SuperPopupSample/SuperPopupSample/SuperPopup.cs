@@ -24,6 +24,13 @@ namespace SuperPopupSample
                                     default(Point),
                                     propertyChanged: OnLocationPropertyChanged);
 
+        public static readonly BindableProperty ProportionalSizeProperty =
+            BindableProperty.Create(nameof(ProportionalSize),
+                                    typeof(Size),
+                                    typeof(SuperPopup),
+                                    default(Size),
+                                    propertyChanged: OnProportionalSizePropertyChanged);
+
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
@@ -34,6 +41,13 @@ namespace SuperPopupSample
         {
             get { return (Point)GetValue(LocationProperty); }
             set { SetValue(LocationProperty, value); }
+        }
+
+        [TypeConverter(typeof(SizeTypeConverter))]
+        public Size ProportionalSize
+        {
+            get { return (Size)GetValue(ProportionalSizeProperty); }
+            set { SetValue(ProportionalSizeProperty, value); }
         }
 
         public SuperPopup()
@@ -80,6 +94,7 @@ namespace SuperPopupSample
                 Command = new Command(ClickOnPopupContent)
             });
 
+            UpdateProportionalSize(ProportionalSize);
             UpdateLocation(Location);
 
             _rootLayout.Children.Add(view);
@@ -111,14 +126,42 @@ namespace SuperPopupSample
             {
                 var x = location.X;
                 var y = location.Y;
+                var width = _view.Width;
+                var height = _view.Height;
 
-                if (x + _view.Width > _rootLayout.Width)
-                    x = x - _view.Width;
+                if (x + width > _rootLayout.Width)
+                    x = x - width;
 
-                if (y + _view.Height > _rootLayout.Height)
-                    y = y - _view.Height;
+                if (y + height > _rootLayout.Height)
+                    y = y - height;
 
-                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(x, y, _view.Width, _view.Height));
+                // Check if AbsoluteLayout should set proportional size to content.
+                if ((AbsoluteLayout.GetLayoutFlags(_view) &
+                        AbsoluteLayoutFlags.SizeProportional) == AbsoluteLayoutFlags.SizeProportional)
+                {
+                    width = ProportionalSize.Width;
+                    height = ProportionalSize.Height;
+                }
+
+                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(x, y, width, height));
+            }
+        }
+
+        static void OnProportionalSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (newValue is Size size)
+            {
+                var popup = bindable as SuperPopup;
+                popup.UpdateProportionalSize(size);
+            }
+        }
+
+        void UpdateProportionalSize(Size size)
+        {
+            if (_view != null && !size.IsZero)
+            {
+                AbsoluteLayout.SetLayoutFlags(_view, AbsoluteLayoutFlags.SizeProportional);
+                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
             }
         }
     }

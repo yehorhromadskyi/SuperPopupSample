@@ -25,7 +25,7 @@ namespace SuperPopupSample
             BindingContext = vm;
 
             PopupService.Register(PopupType.Popup1, PopupView1);
-            PopupService.Register(PopupType.Popup2, PopupView2);
+            //PopupService.Register(PopupType.Popup2, PopupView2);
         }
 
         private void ExecuteShowPopup1Command(object obj)
@@ -42,14 +42,14 @@ namespace SuperPopupSample
 
         private void ExecuteShowPopup2Command(object obj)
         {
-            System.Diagnostics.Debug.WriteLine("MainPage ShowCommand 2");
-
-            if (obj is Point location)
-            {
-                PopupView2.Location = location;
-            }
-
-            (BindingContext as MainPageViewModel).ShowPopup2Command.Execute(null);
+            //System.Diagnostics.Debug.WriteLine("MainPage ShowCommand 2");
+            //
+            //if (obj is Point location)
+            //{
+            //    PopupView2.Location = location;
+            //}
+            //
+            //(BindingContext as MainPageViewModel).ShowPopup2Command.Execute(null);
         }
     }
 }
