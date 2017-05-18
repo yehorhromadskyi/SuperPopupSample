@@ -30,7 +30,7 @@ namespace SuperPopupSample
 
         private void ExecuteShowPopup1Command(object obj)
         {
-            System.Diagnostics.Debug.WriteLine("MainPage ShowCommand");
+            System.Diagnostics.Debug.WriteLine("MainPage ShowCommand 1");
 
             if (obj is Point location)
             {
@@ -42,6 +42,8 @@ namespace SuperPopupSample
 
         private void ExecuteShowPopup2Command(object obj)
         {
+            System.Diagnostics.Debug.WriteLine("MainPage ShowCommand 2");
+
             if (obj is Point location)
             {
                 PopupView2.Location = location;

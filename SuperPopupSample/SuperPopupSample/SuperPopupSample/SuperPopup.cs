@@ -36,7 +36,6 @@ namespace SuperPopupSample
             set { SetValue(LocationProperty, value); }
         }
 
-
         public SuperPopup()
         {
         }
@@ -111,7 +110,16 @@ namespace SuperPopupSample
         {
             if (_view != null)
             {
-                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(location.X, location.Y, _view.Width, _view.Height));
+                var x = location.X;
+                var y = location.Y;
+
+                //if (x + _view.Width > _rootLayout.Width)
+                //    x = x - _view.Width;
+
+                //if (y + _view.Height > _rootLayout.Height)
+                //    y = y - _view.Height;
+
+                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(x, y, _view.Width, _view.Height));
             }
         }
     }

@@ -6,26 +6,25 @@
              x:Name="Page">
     <Grid>
         <StackLayout Orientation="Horizontal"
-                     VerticalOptions="Start">
+                     VerticalOptions="Start"
+                     BackgroundColor="Yellow"
+                     local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}">
             <Grid BackgroundColor="Red"
-                  HeightRequest="80"
-                  local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">
+                  HeightRequest="80">
+                <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">-->
                 <Label Text="Show Popup 1"
                        VerticalTextAlignment="Center"
                        HorizontalTextAlignment="Center"/>
-                <!--<Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ShowPopup1Command}"/>
-                </Grid.GestureRecognizers>-->
             </Grid>
 
             <Label Text="Show Popup 1"
                    VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}" />
+                   HorizontalTextAlignment="Center"/>
+            <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}"/>-->
 
             <Button Text="Show Popup2"
-                    HeightRequest="80"
-                    local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>
+                    HeightRequest="80"/>
+            <!--local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>-->
         </StackLayout>
 
         <local:SuperPopup x:Name="PopupView1">
