@@ -17,6 +17,8 @@ namespace SuperPopupSample
         
         private async void ExecuteShowPopup1Command()
         {
+            System.Diagnostics.Debug.WriteLine("MainViewModel ShowCommand");
+
             var popup = PopupService.Resolve(PopupType.Popup1);
             if (popup != null)
             {

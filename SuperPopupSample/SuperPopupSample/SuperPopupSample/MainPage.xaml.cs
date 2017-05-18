@@ -30,6 +30,8 @@ namespace SuperPopupSample
 
         private void ExecuteShowPopup1Command(object obj)
         {
+            System.Diagnostics.Debug.WriteLine("MainPage ShowCommand");
+
             if (obj is Point location)
             {
                 PopupView1.Location = location;

@@ -9,10 +9,14 @@ namespace SuperPopupSample.iOS
 {
     public class TapGestureEffect : PlatformEffect
     {
+        UIView _view;
         UITapGestureRecognizer _tapRecognizer;
 
         protected override void OnAttached()
         {
+            _view = Control ?? Container;
+            _view.UserInteractionEnabled = true;
+
             _tapRecognizer = new UITapGestureRecognizer(recognizer =>
             {
                 var command = Gestures.GetTappedCommand(Element);
@@ -29,12 +33,13 @@ namespace SuperPopupSample.iOS
                 }
             });
 
-            Control.AddGestureRecognizer(_tapRecognizer);
+            _view.AddGestureRecognizer(_tapRecognizer);
         }
 
         protected override void OnDetached()
         {
-            Control.RemoveGestureRecognizer(_tapRecognizer);
+            _view.RemoveGestureRecognizer(_tapRecognizer);
+            _view = null;
             _tapRecognizer = null;
         }
     }
