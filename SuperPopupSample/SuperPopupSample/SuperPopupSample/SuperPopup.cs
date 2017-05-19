@@ -38,6 +38,8 @@ namespace SuperPopupSample
                                     default(Size),
                                     propertyChanged: OnRequiredSizePropertyChanged);
 
+        public bool IsOpen { get; private set; }
+
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
@@ -72,6 +74,7 @@ namespace SuperPopupSample
         {
             PopupContent.Scale = 0;
             IsVisible = true;
+            IsOpen = true;
             await PopupContent.ScaleTo(1, 100);
         }
 
@@ -79,6 +82,7 @@ namespace SuperPopupSample
         {
             await PopupContent.ScaleTo(0, 100);
             IsVisible = false;
+            IsOpen = false;
             PopupContent.Scale = 1;
         }
 
