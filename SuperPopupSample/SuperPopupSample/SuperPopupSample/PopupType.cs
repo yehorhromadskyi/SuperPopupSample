@@ -2,7 +2,8 @@
 {
     public enum PopupType
     {
-        Popup1,
-        Popup2
+        Popup,
+        SizedPopup,
+        ProportionallySizedPopup
     }
 }

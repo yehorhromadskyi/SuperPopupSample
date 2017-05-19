@@ -10,46 +10,56 @@ namespace SuperPopupSample
 {
     public partial class MainPage : ContentPage
     {
-        public ICommand ShowPopup1Command { get; set; }
+        public ICommand ShowPopupCommand { get; set; }
 
-        public ICommand ShowPopup2Command { get; set; }
+        public ICommand ShowSizedPopupCommand { get; set; }
+
+        public ICommand ShowProportionallySizedPopupCommand { get; set; }
 
         public MainPage()
         {
             InitializeComponent();
 
-            ShowPopup1Command = new Command(ExecuteShowPopup1Command);
-            ShowPopup2Command = new Command(ExecuteShowPopup2Command);
+            ShowPopupCommand = new Command(ExecuteShowPopupCommand);
+            ShowSizedPopupCommand = new Command(ExecuteShowSizedPopupCommand);
+            ShowProportionallySizedPopupCommand = new Command(ExecuteShowProportionallySizedPopupCommand);
 
             var vm = new MainPageViewModel();
             BindingContext = vm;
 
-            PopupService.Register(PopupType.Popup1, PopupView1);
-            //PopupService.Register(PopupType.Popup2, PopupView2);
+            PopupService.Register(PopupType.Popup, Popup);
+            PopupService.Register(PopupType.SizedPopup, SizedPopup);
+            PopupService.Register(PopupType.ProportionallySizedPopup, ProportionallySizedPopup);
         }
 
-        private void ExecuteShowPopup1Command(object obj)
+        private void ExecuteShowPopupCommand(object obj)
         {
-            System.Diagnostics.Debug.WriteLine("MainPage ShowCommand 1");
-
             if (obj is Point location)
             {
-                PopupView1.Location = location;
+                Popup.Location = location;
             }
 
-            (BindingContext as MainPageViewModel).ShowPopup1Command.Execute(null);
+            (BindingContext as MainPageViewModel).ShowPopupCommand.Execute(null);
         }
 
-        private void ExecuteShowPopup2Command(object obj)
+        private void ExecuteShowSizedPopupCommand(object obj)
         {
-            //System.Diagnostics.Debug.WriteLine("MainPage ShowCommand 2");
-            //
-            //if (obj is Point location)
-            //{
-            //    PopupView2.Location = location;
-            //}
-            //
-            //(BindingContext as MainPageViewModel).ShowPopup2Command.Execute(null);
+            if (obj is Point location)
+            {
+                SizedPopup.Location = location;
+            }
+
+            (BindingContext as MainPageViewModel).ShowSizedPopupCommand.Execute(null);
+        }
+
+        private void ExecuteShowProportionallySizedPopupCommand(object obj)
+        {
+            if (obj is Point location)
+            {
+                ProportionallySizedPopup.Location = location;
+            }
+
+            (BindingContext as MainPageViewModel).ShowProportionallySizedPopupCommand.Execute(null);
         }
     }
 }

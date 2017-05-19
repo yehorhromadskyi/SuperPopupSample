@@ -5,66 +5,54 @@
              x:Class="SuperPopupSample.MainPage"
              x:Name="Page">
     <Grid>
-        <StackLayout Orientation="Horizontal"
-                     VerticalOptions="Start"
-                     BackgroundColor="Yellow"
-                     local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">
-            <Grid BackgroundColor="Red"
+        <StackLayout>
+            <Grid BackgroundColor="Orange"
                   HeightRequest="80"
-                  local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">
-                <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">-->
-                <Label Text="Show Popup 1"
+                  VerticalOptions="StartAndExpand"
+                  local:Gestures.TappedCommand="{Binding ShowPopupCommand, Source={x:Reference Page}}">
+                <Label Text="Show Popup"
                        VerticalTextAlignment="Center"
                        HorizontalTextAlignment="Center"/>
             </Grid>
-
-            <Label Text="Show Popup 1"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"/>
-            <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}"/>-->
-
-            <Button Text="Show Popup2"
-                    HeightRequest="80"
-                    local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>
-        </StackLayout>
-
-        <StackLayout Orientation="Horizontal"
-                     VerticalOptions="End"
-                     BackgroundColor="Yellow"
-                     local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}">
-            <Grid BackgroundColor="Red"
+            <Grid BackgroundColor="Yellow"
                   HeightRequest="80"
-                  local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">
-                <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}">-->
-                <Label Text="Show Popup 1"
+                  VerticalOptions="CenterAndExpand"
+                  local:Gestures.TappedCommand="{Binding ShowSizedPopupCommand, Source={x:Reference Page}}">
+                <Label Text="Show Popup of fixed size"
                        VerticalTextAlignment="Center"
                        HorizontalTextAlignment="Center"/>
             </Grid>
-
-            <Label Text="Show Popup 1"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"/>
-            <!--local:Gestures.TappedCommand="{Binding ShowPopup1Command, Source={x:Reference Page}}"/>-->
-
-            <Button Text="Show Popup2"
-                    HeightRequest="80"
-                    local:Gestures.TappedCommand="{Binding ShowPopup2Command, Source={x:Reference Page}}"/>
+            <Grid BackgroundColor="Green"
+                  HeightRequest="80"
+                  VerticalOptions="EndAndExpand"
+                  local:Gestures.TappedCommand="{Binding ShowProportionallySizedPopupCommand, Source={x:Reference Page}}">
+                <Label Text="Show Popup of proportional size"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"/>
+            </Grid>
         </StackLayout>
-
-        <local:SuperPopup x:Name="PopupView1"
-                          Location="300,300"
-                          ProportionalSize="0.5,0.5">
+        
+        <local:SuperPopup x:Name="Popup">
             <Frame HasShadow="True"
                    BackgroundColor="White">
-                <Label Text="Popup 1"/>
+                <Label Text="Popup with auto size"/>
             </Frame>
         </local:SuperPopup>
 
-        <!--<local:SuperPopup x:Name="PopupView2">
+        <local:SuperPopup x:Name="SizedPopup"
+                          RequiredSize="460,80">
             <Frame HasShadow="True"
                    BackgroundColor="White">
-                <Label Text="Popup 2"/>
+                <Label Text="Popup with fixed size"/>
             </Frame>
-        </local:SuperPopup>-->
+        </local:SuperPopup>
+
+        <local:SuperPopup x:Name="ProportionallySizedPopup"
+                          ProportionalSize="0.3,0.7">
+            <Frame HasShadow="True"
+                   BackgroundColor="White">
+                <Label Text="Popup with proportional size"/>
+            </Frame>
+        </local:SuperPopup>
     </Grid>
 </ContentPage>
