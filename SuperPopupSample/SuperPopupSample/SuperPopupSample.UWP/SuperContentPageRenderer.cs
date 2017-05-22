@@ -12,7 +12,7 @@ namespace SuperPopupSample.UWP
         {
             base.OnElementChanged(e);
 
-            if (e.NewElement != null)
+            if (e.OldElement != null)
             {
                 PointerPressed -= OnPointerPressed;
             }
