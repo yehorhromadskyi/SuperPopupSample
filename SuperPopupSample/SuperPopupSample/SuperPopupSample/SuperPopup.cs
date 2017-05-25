@@ -8,7 +8,7 @@ namespace SuperPopupSample
     public class SuperPopup : ContentView, IPopup
     {
         AbsoluteLayout _rootLayout;
-        View _view;
+        SuperFrame _contentFrame;
 
         public static readonly BindableProperty PopupContentProperty =
             BindableProperty.Create(nameof(PopupContent),
@@ -72,18 +72,24 @@ namespace SuperPopupSample
 
         public async Task ShowAsync()
         {
-            PopupContent.Scale = 0;
-            IsVisible = true;
+            _contentFrame.Scale = 0;
+            Opacity = 1;
+            InputTransparent = false;
+            _rootLayout.Opacity = 1;
+            _rootLayout.InputTransparent = false;
             IsOpen = true;
-            await PopupContent.ScaleTo(1, 100);
+            await _contentFrame.ScaleTo(1, 100);
         }
 
         public async Task HideAsync()
         {
-            await PopupContent.ScaleTo(0, 100);
-            IsVisible = false;
+            await _contentFrame.ScaleTo(0, 100);
+            Opacity = 0;
+            InputTransparent = true;
+            _rootLayout.Opacity = 0;
+            _rootLayout.InputTransparent = true;
             IsOpen = false;
-            PopupContent.Scale = 1;
+            _contentFrame.Scale = 1;
         }
 
         static void OnPopupContentPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -97,17 +103,21 @@ namespace SuperPopupSample
 
         void UpdateContent(View view)
         {
-            IsVisible = false;
             // Note that UWP will not handle tap on AbsoluteLayout if remove Background
             _rootLayout = new AbsoluteLayout() { BackgroundColor = Color.Transparent };
-            _view = view;
-            
+
+            _contentFrame = new SuperFrame
+            {
+                HasShadow = true,
+                Content = view
+            };
+
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
             {
                 Command = new Command(ClickOutsidePopupContent)
             });
 
-            view.GestureRecognizers.Add(new TapGestureRecognizer
+            _contentFrame.GestureRecognizers.Add(new TapGestureRecognizer
             {
                 Command = new Command(ClickOnPopupContent)
             });
@@ -116,8 +126,13 @@ namespace SuperPopupSample
             UpdateProportionalSize(ProportionalSize);
             UpdateLocation(Location);
 
-            _rootLayout.Children.Add(view);
+            _rootLayout.Children.Add(_contentFrame);
             Content = _rootLayout;
+
+            Opacity = 0;
+            InputTransparent = true;
+            _rootLayout.Opacity = 0;
+            _rootLayout.InputTransparent = true;
         }
 
         void ClickOnPopupContent()
@@ -141,34 +156,57 @@ namespace SuperPopupSample
 
         void UpdateLocation(Point location)
         {
-            if (_view != null)
+            if (_contentFrame != null)
             {
                 var x = location.X;
                 var y = location.Y;
-                var width = _view.Width;
-                var height = _view.Height;
+                var width = _contentFrame.Width;
+                var height = _contentFrame.Height;
 
                 if (x + width > _rootLayout.Width)
-                    x = x - width;
+                {
+                    if (x + width / 2 > _rootLayout.Width)
+                    {
+                        x = _rootLayout.Width - width;
+                    }
+                    else
+                    {
+                        x = x - width / 2;
+                    }
+                }
+                else
+                {
+                    if (x - width / 2 > 0)
+                    {
+                        x -= width / 2;
+                    }
+                    else
+                    {
+                        x = 0;
+                    }
+                }
 
                 if (y + height > _rootLayout.Height)
-                    y = y - height;
+                {
+                    y -= height;
+                }
 
                 if (!RequiredSize.IsZero)
                 {
                     width = RequiredSize.Width;
                     height = RequiredSize.Height;
-                    AbsoluteLayout.SetLayoutFlags(_view, AbsoluteLayoutFlags.None);
+                    AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.None);
                 }
 
                 if (!ProportionalSize.IsZero)
                 {
                     width = ProportionalSize.Width;
                     height = ProportionalSize.Height;
-                    AbsoluteLayout.SetLayoutFlags(_view, AbsoluteLayoutFlags.SizeProportional);
+                    AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.SizeProportional);
                 }
 
-                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(x, y, width, height));
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(x, y, width, height));
+                //_contentFrame.DrawArrow(arrowPlacement);
             }
         }
 
@@ -183,10 +221,10 @@ namespace SuperPopupSample
 
         void UpdateProportionalSize(Size size)
         {
-            if (_view != null && !size.IsZero)
+            if (_contentFrame != null && !size.IsZero)
             {
-                AbsoluteLayout.SetLayoutFlags(_view, AbsoluteLayoutFlags.SizeProportional);
-                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
+                AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.SizeProportional);
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
             }
         }
 
@@ -201,10 +239,10 @@ namespace SuperPopupSample
 
         void UpdateRequiredSize(Size size)
         {
-            if (_view != null && !size.IsZero)
+            if (_contentFrame != null && !size.IsZero)
             {
-                AbsoluteLayout.SetLayoutFlags(_view, AbsoluteLayoutFlags.None);
-                AbsoluteLayout.SetLayoutBounds(_view, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
+                AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.None);
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
             }
         }
     }
