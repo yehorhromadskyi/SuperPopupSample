@@ -7,6 +7,8 @@ namespace SuperPopupSample
     [ContentProperty(nameof(PopupContent))]
     public class SuperPopup : ContentView
     {
+        public const double ContentMargin = 10;
+
         AbsoluteLayout _rootLayout;
         SuperFrame _contentFrame;
 
@@ -37,7 +39,6 @@ namespace SuperPopupSample
                                     typeof(SuperPopup),
                                     default(Size),
                                     propertyChanged: OnRequiredSizePropertyChanged);
-
 
         public static readonly BindableProperty IsOpenProperty =
             BindableProperty.Create(nameof(IsOpen),
@@ -150,38 +151,36 @@ namespace SuperPopupSample
         {
             if (_contentFrame != null)
             {
-                var Margin = 10;
-
                 var x = location.X;
                 var y = location.Y;
                 var width = _contentFrame.Width;
                 var height = _contentFrame.Height;
 
                 // step out of the right edge of the screen
-                if (x + width + Margin > _rootLayout.Width)
+                if (x + width / 2 + ContentMargin > _rootLayout.Width)
                 {
-                    x = _rootLayout.Width - width - Margin;
+                    x = _rootLayout.Width - width - ContentMargin;
                 }
                 else
                 {
-                    if (x - width / 2 > Margin)
+                    if (x - width / 2 > ContentMargin)
                     {
                         x -= width / 2;
                     }
                     else
                     {
-                        x = Margin;
+                        x = ContentMargin;
                     }
                 }
 
                 // step out of the bottom edge of the screen
-                if (y + height + Margin * 2 > _rootLayout.Height)
+                if (y + height + ContentMargin * 2 > _rootLayout.Height)
                 {
-                    y = y - height - Margin;
+                    y = y - height - ContentMargin;
                 }
                 else
                 {
-                    y += Margin;
+                    y += ContentMargin;
                 }
                 
                 if (!RequiredSize.IsZero)
