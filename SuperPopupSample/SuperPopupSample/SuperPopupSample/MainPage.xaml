@@ -7,82 +7,23 @@
     x:Name="Page">
 
     <Grid>
-        <StackLayout>
-            <Grid BackgroundColor="Orange"
-                  HeightRequest="80"
-                  VerticalOptions="StartAndExpand">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ShowPopupCommand}"
-                                          NumberOfTapsRequired="1"/>
-                </Grid.GestureRecognizers>
-                
-                <Label Text="Grid - Show Popup"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"/>
-            </Grid>
+        <Grid BackgroundColor="Orange">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ShowPopupCommand}"
+                                      NumberOfTapsRequired="1"/>
+            </Grid.GestureRecognizers>
             
-            <StackLayout BackgroundColor="Yellow"
-                         HeightRequest="80"
-                         VerticalOptions="CenterAndExpand">
-                <StackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ShowSizedPopupCommand}"
-                                          NumberOfTapsRequired="1"/>
-                </StackLayout.GestureRecognizers>
-                
-                <Label Text="StackLayout - Show Popup of fixed size"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"/>
+            <StackLayout Orientation="Horizontal"
+                         VerticalOptions="Center"
+                         BackgroundColor="Aquamarine">
+                <Label Text="Popup"/>
             </StackLayout>
-            
-            <Frame BackgroundColor="Green"
-                   HeightRequest="80"
-                   VerticalOptions="EndAndExpand">
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ShowProportionallySizedPopupCommand}"
-                                          NumberOfTapsRequired="1"/>
-                </Frame.GestureRecognizers>
-                
-                <Label Text="Frame - Show Popup of proportional size"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"/>
-            </Frame>
-            
-            <Button Text="Button - Show Popup"/>
+        </Grid>
 
-            <ContentView BackgroundColor="Blue"
-                         HeightRequest="120">
-                <ContentView.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ShowPopupCommand}"
-                                          NumberOfTapsRequired="1"/>
-                </ContentView.GestureRecognizers>
-                
-                <Label Text="ContentView - Show Popup"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"/>
-            </ContentView>
-        </StackLayout>
-        
-        <local:SuperPopup x:Name="Popup">
-            <Frame HasShadow="True"
-                   BackgroundColor="White">
-                <Label Text="Popup with auto size"/>
-            </Frame>
-        </local:SuperPopup>
-
-        <local:SuperPopup x:Name="SizedPopup"
-                          RequiredSize="460,80">
-            <Frame HasShadow="True"
-                   BackgroundColor="White">
-                <Label Text="Popup with fixed size"/>
-            </Frame>
-        </local:SuperPopup>
-
-        <local:SuperPopup x:Name="ProportionallySizedPopup"
-                          ProportionalSize="0.3,0.7">
-            <Frame HasShadow="True"
-                   BackgroundColor="White">
-                <Label Text="Popup with proportional size"/>
-            </Frame>
+        <local:SuperPopup x:Name="Popup"
+                          IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
+                          RequiredSize="120,40">
+            <Label Text="Popup with auto size"/>
         </local:SuperPopup>
     </Grid>
 </local:SuperContentPage>

@@ -5,7 +5,7 @@ using Xamarin.Forms;
 namespace SuperPopupSample
 {
     [ContentProperty(nameof(PopupContent))]
-    public class SuperPopup : ContentView, IPopup
+    public class SuperPopup : ContentView
     {
         AbsoluteLayout _rootLayout;
         SuperFrame _contentFrame;
@@ -17,12 +17,12 @@ namespace SuperPopupSample
                                     default(View),
                                     propertyChanged: OnPopupContentPropertyChanged);
 
-        public static readonly BindableProperty LocationProperty =
-            BindableProperty.Create(nameof(Location),
+        public static readonly BindableProperty LocationRequestProperty =
+            BindableProperty.Create(nameof(LocationRequest),
                                     typeof(Point),
                                     typeof(SuperPopup),
                                     default(Point),
-                                    propertyChanged: OnLocationPropertyChanged);
+                                    propertyChanged: OnLocationRequestPropertyChanged);
 
         public static readonly BindableProperty ProportionalSizeProperty =
             BindableProperty.Create(nameof(ProportionalSize),
@@ -38,7 +38,13 @@ namespace SuperPopupSample
                                     default(Size),
                                     propertyChanged: OnRequiredSizePropertyChanged);
 
-        public bool IsOpen { get; private set; }
+
+        public static readonly BindableProperty IsOpenProperty =
+            BindableProperty.Create(nameof(IsOpen),
+                                    typeof(bool),
+                                    typeof(SuperPopup),
+                                    false,
+                                    propertyChanged: OnIsOpenPropertyChanged);
 
         public View PopupContent
         {
@@ -46,10 +52,10 @@ namespace SuperPopupSample
             set { SetValue(PopupContentProperty, value); }
         }
 
-        public Point Location
+        public Point LocationRequest
         {
-            get { return (Point)GetValue(LocationProperty); }
-            set { SetValue(LocationProperty, value); }
+            get { return (Point)GetValue(LocationRequestProperty); }
+            set { SetValue(LocationRequestProperty, value); }
         }
 
         [TypeConverter(typeof(SizeTypeConverter))]
@@ -66,30 +72,16 @@ namespace SuperPopupSample
             set { SetValue(RequiredSizeProperty, value); }
         }
 
+        public bool IsOpen
+        {
+            get { return (bool)GetValue(IsOpenProperty); }
+            set { SetValue(IsOpenProperty, value); }
+        }
+
+        public Point Location { get; private set; }
+
         public SuperPopup()
         {
-        }
-
-        public async Task ShowAsync()
-        {
-            _contentFrame.Scale = 0;
-            Opacity = 1;
-            InputTransparent = false;
-            _rootLayout.Opacity = 1;
-            _rootLayout.InputTransparent = false;
-            IsOpen = true;
-            await _contentFrame.ScaleTo(1, 100);
-        }
-
-        public async Task HideAsync()
-        {
-            await _contentFrame.ScaleTo(0, 100);
-            Opacity = 0;
-            InputTransparent = true;
-            _rootLayout.Opacity = 0;
-            _rootLayout.InputTransparent = true;
-            IsOpen = false;
-            _contentFrame.Scale = 1;
         }
 
         static void OnPopupContentPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -124,7 +116,7 @@ namespace SuperPopupSample
 
             UpdateRequiredSize(RequiredSize);
             UpdateProportionalSize(ProportionalSize);
-            UpdateLocation(Location);
+            UpdateLocation(LocationRequest);
 
             _rootLayout.Children.Add(_contentFrame);
             Content = _rootLayout;
@@ -140,12 +132,12 @@ namespace SuperPopupSample
             // Ignoring required for iOS to prevent ClickOutsidePopupContent from calling.
         }
 
-        async void ClickOutsidePopupContent()
+        void ClickOutsidePopupContent()
         {
-            await HideAsync();
+            IsOpen = false;
         }
 
-        static void OnLocationPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        static void OnLocationRequestPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (newValue is Point location)
             {
@@ -158,39 +150,40 @@ namespace SuperPopupSample
         {
             if (_contentFrame != null)
             {
+                var Margin = 10;
+
                 var x = location.X;
                 var y = location.Y;
                 var width = _contentFrame.Width;
                 var height = _contentFrame.Height;
 
-                if (x + width > _rootLayout.Width)
+                // step out of the right edge of the screen
+                if (x + width + Margin > _rootLayout.Width)
                 {
-                    if (x + width / 2 > _rootLayout.Width)
-                    {
-                        x = _rootLayout.Width - width;
-                    }
-                    else
-                    {
-                        x = x - width / 2;
-                    }
+                    x = _rootLayout.Width - width - Margin;
                 }
                 else
                 {
-                    if (x - width / 2 > 0)
+                    if (x - width / 2 > Margin)
                     {
                         x -= width / 2;
                     }
                     else
                     {
-                        x = 0;
+                        x = Margin;
                     }
                 }
 
-                if (y + height > _rootLayout.Height)
+                // step out of the bottom edge of the screen
+                if (y + height + Margin * 2 > _rootLayout.Height)
                 {
-                    y -= height;
+                    y = y - height - Margin;
                 }
-
+                else
+                {
+                    y += Margin;
+                }
+                
                 if (!RequiredSize.IsZero)
                 {
                     width = RequiredSize.Width;
@@ -204,6 +197,8 @@ namespace SuperPopupSample
                     height = ProportionalSize.Height;
                     AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.SizeProportional);
                 }
+
+                Location = new Point(x, y);
 
                 AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(x, y, width, height));
                 //_contentFrame.DrawArrow(arrowPlacement);
@@ -224,7 +219,7 @@ namespace SuperPopupSample
             if (_contentFrame != null && !size.IsZero)
             {
                 AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.SizeProportional);
-                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(LocationRequest.X, LocationRequest.Y, size.Width, size.Height));
             }
         }
 
@@ -242,8 +237,46 @@ namespace SuperPopupSample
             if (_contentFrame != null && !size.IsZero)
             {
                 AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.None);
-                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(Location.X, Location.Y, size.Width, size.Height));
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(LocationRequest.X, LocationRequest.Y, size.Width, size.Height));
             }
+        }
+
+        static async void OnIsOpenPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var popup = bindable as SuperPopup;
+            await popup.UpdateIsOpen((bool)newValue);
+        }
+
+        Task UpdateIsOpen(bool isOpen)
+        {
+            if (isOpen)
+            {
+                return ShowAsync();
+            }
+            else
+            {
+                return HideAsync();
+            }
+        }
+
+        async Task ShowAsync()
+        {
+            _contentFrame.Scale = 0;
+            Opacity = 1;
+            InputTransparent = false;
+            _rootLayout.Opacity = 1;
+            _rootLayout.InputTransparent = false;
+            await _contentFrame.ScaleTo(1, 100);
+        }
+
+        async Task HideAsync()
+        {
+            await _contentFrame.ScaleTo(0, 100);
+            Opacity = 0;
+            InputTransparent = true;
+            _rootLayout.Opacity = 0;
+            _rootLayout.InputTransparent = true;
+            _contentFrame.Scale = 1;
         }
     }
 }

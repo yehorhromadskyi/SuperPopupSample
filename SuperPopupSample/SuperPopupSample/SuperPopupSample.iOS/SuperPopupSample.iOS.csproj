@@ -92,6 +92,7 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="SuperContentPageRenderer.cs" />
     <Compile Include="TapGestureEffect.cs" />
+    <Compile Include="SuperFrameRenderer.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />

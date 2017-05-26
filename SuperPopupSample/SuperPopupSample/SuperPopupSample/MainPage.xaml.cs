@@ -10,20 +10,11 @@ namespace SuperPopupSample
 {
     public partial class MainPage : SuperContentPage
     {
-        public ICommand ShowPopupCommand { get; set; }
-
         public MainPage()
         {
             InitializeComponent();
 
-            ShowPopupCommand = new Command(ExecuteShowPopupCommand);
-
-            var vm = new MainPageViewModel();
-            BindingContext = vm;
-
-            PopupService.Register(PopupType.Popup, Popup);
-            PopupService.Register(PopupType.SizedPopup, SizedPopup);
-            PopupService.Register(PopupType.ProportionallySizedPopup, ProportionallySizedPopup);
+            BindingContext = new MainPageViewModel();
         }
 
         protected override void OnTapped(Point point)
@@ -32,28 +23,8 @@ namespace SuperPopupSample
 
             if (!Popup.IsOpen)
             {
-                Popup.Location = point;
+                Popup.LocationRequest = point;
             }
-
-            if (!SizedPopup.IsOpen)
-            {
-                SizedPopup.Location = point;
-            }
-
-            if (!ProportionallySizedPopup.IsOpen)
-            {
-                ProportionallySizedPopup.Location = point; 
-            }
-        }
-
-        private void ExecuteShowPopupCommand(object obj)
-        {
-            if (obj is Point location)
-            {
-                Popup.Location = location;
-            }
-
-            (BindingContext as MainPageViewModel).ShowPopupCommand.Execute(null);
         }
     }
 }
