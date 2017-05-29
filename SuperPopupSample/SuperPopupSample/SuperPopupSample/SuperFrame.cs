@@ -1,28 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SuperPopupSample
 {
-    [Flags]
-    public enum ArrowPlacement
+    public class DrawArrowRequest
     {
-        TopLeft,
-        TopRight,
-        BottomLeft,
-        BottomRight
+        public Point Location { get; set; }
+        public double Rotation { get; set; }
     }
 
     public class SuperFrame : Frame
     {
-        public event EventHandler<ArrowPlacement> DrawArrowRequested;
+        public event EventHandler<DrawArrowRequest> DrawArrowRequested;
 
-        public void DrawArrow(ArrowPlacement placement)
+        public void DrawArrow(DrawArrowRequest request)
         {
-            DrawArrowRequested?.Invoke(this, placement);
+            DrawArrowRequested?.Invoke(this, request);
         }
     }
 }

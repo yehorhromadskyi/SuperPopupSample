@@ -79,6 +79,9 @@ namespace SuperPopupSample
             set { SetValue(IsOpenProperty, value); }
         }
 
+        /// <summary>
+        /// Coordinates of the Top-Left corner of PopupContent.
+        /// </summary>
         public Point Location { get; private set; }
 
         public SuperPopup()
@@ -151,12 +154,13 @@ namespace SuperPopupSample
         {
             if (_contentFrame != null)
             {
+                var arrowRotation = 0;
                 var x = location.X;
                 var y = location.Y;
                 var width = _contentFrame.Width;
                 var height = _contentFrame.Height;
 
-                // step out of the right edge of the screen
+                // crossed the right edge of the screen
                 if (x + width / 2 + ContentMargin > _rootLayout.Width)
                 {
                     x = _rootLayout.Width - width - ContentMargin;
@@ -173,16 +177,19 @@ namespace SuperPopupSample
                     }
                 }
 
-                // step out of the bottom edge of the screen
+                // crossed the bottom edge of the screen
                 if (y + height + ContentMargin * 2 > _rootLayout.Height)
                 {
                     y = y - height - ContentMargin;
+                    arrowRotation = 180;
                 }
                 else
                 {
                     y += ContentMargin;
                 }
-                
+
+                var arrowX = Math.Min(Math.Max(location.X - x, ContentMargin * 1.5), width - ContentMargin * 1.5);
+
                 if (!RequiredSize.IsZero)
                 {
                     width = RequiredSize.Width;
@@ -200,7 +207,11 @@ namespace SuperPopupSample
                 Location = new Point(x, y);
 
                 AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(x, y, width, height));
-                //_contentFrame.DrawArrow(arrowPlacement);
+                _contentFrame.DrawArrow(new DrawArrowRequest
+                {
+                    Location = new Point(arrowX, location.Y - y),
+                    Rotation = arrowRotation
+                });
             }
         }
 

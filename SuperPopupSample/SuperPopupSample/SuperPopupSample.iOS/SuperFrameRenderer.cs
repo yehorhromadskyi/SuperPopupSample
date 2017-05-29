@@ -36,12 +36,12 @@ namespace SuperPopupSample.iOS
             }
         }
 
-        private void OnDrawArrowRequest(object sender, ArrowPlacement placement)
+        private void OnDrawArrowRequest(object sender, DrawArrowRequest request)
         {
-            DrawArrow(placement);
+            DrawArrow(request);
         }
 
-        void DrawArrow(ArrowPlacement placement)
+        void DrawArrow(DrawArrowRequest request)
         {
             if (_triangle_Layer == null)
             {
@@ -54,39 +54,15 @@ namespace SuperPopupSample.iOS
                 triangle_Path.ClosePath();
 
                 _triangle_Layer.Path = triangle_Path.CGPath;
-                _triangle_Layer.FillColor = UIColor.FromRGBA(255, 255, 255, 200).CGColor;
+                _triangle_Layer.FillColor = UIColor.FromRGBA(255, 255, 255, 255).CGColor;
                 _triangle_Layer.AnchorPoint = CGPoint.Empty;
 
                 NativeView.Layer.AddSublayer(_triangle_Layer);
             }
 
-
-            switch (placement)
-            {
-                case ArrowPlacement.TopLeft:
-                    _triangle_Layer.Frame = new CGRect(NativeView.Bounds.X + ArrowSize * 1.5,
-                        NativeView.Bounds.Y - ArrowSize, ArrowSize, ArrowSize);
-                    _triangle_Layer.Transform = CATransform3D.MakeRotation(0, 0, 0, 1);
-                    break;
-
-                case ArrowPlacement.TopRight:
-                    _triangle_Layer.Frame = new CGRect(NativeView.Bounds.X + NativeView.Bounds.Width - ArrowSize * 1.5,
-                        NativeView.Bounds.Y - ArrowSize, ArrowSize, ArrowSize);
-                    _triangle_Layer.Transform = CATransform3D.MakeRotation(0, 0, 0, 1);
-                    break;
-
-                case ArrowPlacement.BottomLeft:
-                    _triangle_Layer.Frame = new CGRect(NativeView.Bounds.X + ArrowSize * 1.5,
-                        NativeView.Bounds.Y + NativeView.Bounds.Height + ArrowSize, ArrowSize, ArrowSize);
-                    _triangle_Layer.Transform = CATransform3D.MakeRotation((float)Math.PI, 0, 0, 1);
-                    break;
-
-                case ArrowPlacement.BottomRight:
-                    _triangle_Layer.Frame = new CGRect(NativeView.Bounds.X + NativeView.Bounds.Width - ArrowSize * 1.5,
-                        NativeView.Bounds.Y + NativeView.Bounds.Height + ArrowSize, ArrowSize, ArrowSize);
-                    _triangle_Layer.Transform = CATransform3D.MakeRotation((float)Math.PI, 0, 0, 1);
-                    break;
-            }
+            var radians = request.Rotation * Math.PI / 180;
+            _triangle_Layer.Transform = CATransform3D.MakeRotation((float)radians, 0, 0, 1);
+            _triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, ArrowSize, ArrowSize);
         }
     }
 }
