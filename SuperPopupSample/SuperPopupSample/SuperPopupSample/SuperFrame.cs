@@ -3,29 +3,19 @@ using Xamarin.Forms;
 
 namespace SuperPopupSample
 {
-    public class DrawArrowOptions
+    public class ArrowOptions
     {
         public Point Location { get; set; }
         public double Rotation { get; set; }
+        public Color Color { get; set; }
+        public double Size { get; set; }
     }
 
     public class SuperFrame : Frame
     {
-        public event EventHandler<DrawArrowOptions> DrawArrowRequested;
+        public event EventHandler<ArrowOptions> DrawArrowRequested;
 
-        public static readonly BindableProperty ArrowSizeProperty =
-            BindableProperty.Create(nameof(ArrowSize),
-                                    typeof(double),
-                                    typeof(SuperFrame),
-                                    10d);
-
-        public double ArrowSize
-        {
-            get { return (double)GetValue(ArrowSizeProperty); }
-            set { SetValue(ArrowSizeProperty, value); }
-        }
-
-        public void DrawArrow(DrawArrowOptions request)
+        public void DrawArrow(ArrowOptions request)
         {
             DrawArrowRequested?.Invoke(this, request);
         }

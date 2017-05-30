@@ -196,10 +196,12 @@ namespace SuperPopupSample
 
                 if (IsArrowVisible)
                 {
-                    _contentFrame.DrawArrow(new DrawArrowOptions
+                    _contentFrame.DrawArrow(new ArrowOptions
                     {
                         Location = new Point(arrowX, location.Y - y),
-                        Rotation = arrowRotation
+                        Rotation = arrowRotation,
+                        Size = ContentMargin,
+                        Color = Color.White
                     });
                 }
             }
