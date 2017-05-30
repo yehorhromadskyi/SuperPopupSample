@@ -167,14 +167,7 @@ namespace SuperPopupSample
                 }
                 else
                 {
-                    if (x - width / 2 > ContentMargin)
-                    {
-                        x -= width / 2;
-                    }
-                    else
-                    {
-                        x = ContentMargin;
-                    }
+                    x = Math.Max(x - width / 2, ContentMargin);
                 }
 
                 // crossed the bottom edge of the screen
