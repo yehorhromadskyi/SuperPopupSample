@@ -42,12 +42,7 @@ namespace SuperPopupSample.iOS
 
         void DrawArrow(ArrowOptions request)
         {
-            if (_triangle_Layer != null)
-            {
-                NativeView.Layer.ReplaceSublayer(_triangle_Layer, new CALayer());
-            }
-
-            _triangle_Layer = new CAShapeLayer();
+            var triangle_Layer = new CAShapeLayer();
             var triangle_Path = new UIBezierPath();
 
             var arrowSize = (float)request.Size;
@@ -56,15 +51,24 @@ namespace SuperPopupSample.iOS
             triangle_Path.AddLineTo(new CGPoint(arrowSize, arrowSize));
             triangle_Path.ClosePath();
 
-            _triangle_Layer.Path = triangle_Path.CGPath;
-            _triangle_Layer.FillColor = request.Color.ToCGColor();
-            _triangle_Layer.AnchorPoint = CGPoint.Empty;
+            triangle_Layer.Path = triangle_Path.CGPath;
+            triangle_Layer.FillColor = request.Color.ToCGColor();
+            triangle_Layer.AnchorPoint = CGPoint.Empty;
 
             var radians = request.Rotation * Math.PI / 180;
-            _triangle_Layer.Transform = CATransform3D.MakeRotation((float)radians, 0, 0, 1);
-            _triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, arrowSize, arrowSize);
+            triangle_Layer.Transform = CATransform3D.MakeRotation((float)radians, 0, 0, 1);
+            triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, arrowSize, arrowSize);
 
-            NativeView.Layer.AddSublayer(_triangle_Layer);
+            if (_triangle_Layer != null)
+            {
+                NativeView.Layer.ReplaceSublayer(_triangle_Layer, triangle_Layer);
+            }
+            else
+            {
+                NativeView.Layer.AddSublayer(triangle_Layer);
+            }
+
+            _triangle_Layer = triangle_Layer;
         }
     }
 }
