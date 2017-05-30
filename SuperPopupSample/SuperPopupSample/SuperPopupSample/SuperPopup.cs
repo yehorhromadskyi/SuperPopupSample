@@ -23,22 +23,19 @@ namespace SuperPopupSample
             BindableProperty.Create(nameof(LocationRequest),
                                     typeof(Point),
                                     typeof(SuperPopup),
-                                    default(Point),
-                                    propertyChanged: OnLocationRequestPropertyChanged);
+                                    new Point(0, 0));
 
         public static readonly BindableProperty ProportionalSizeProperty =
             BindableProperty.Create(nameof(ProportionalSize),
                                     typeof(Size),
                                     typeof(SuperPopup),
-                                    default(Size),
-                                    propertyChanged: OnProportionalSizePropertyChanged);
+                                    default(Size));
 
         public static readonly BindableProperty RequiredSizeProperty =
             BindableProperty.Create(nameof(RequiredSize),
                                     typeof(Size),
                                     typeof(SuperPopup),
-                                    default(Size),
-                                    propertyChanged: OnRequiredSizePropertyChanged);
+                                    default(Size));
 
         public static readonly BindableProperty IsOpenProperty =
             BindableProperty.Create(nameof(IsOpen),
@@ -47,6 +44,12 @@ namespace SuperPopupSample
                                     false,
                                     propertyChanged: OnIsOpenPropertyChanged);
 
+        public static readonly BindableProperty IsArrowVisibleProperty =
+            BindableProperty.Create(nameof(IsArrowVisible),
+                                    typeof(bool),
+                                    typeof(SuperPopup),
+                                    false);
+        
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
@@ -79,6 +82,12 @@ namespace SuperPopupSample
             set { SetValue(IsOpenProperty, value); }
         }
 
+        public bool IsArrowVisible
+        {
+            get { return (bool)GetValue(IsArrowVisibleProperty); }
+            set { SetValue(IsArrowVisibleProperty, value); }
+        }
+
         /// <summary>
         /// Coordinates of the Top-Left corner of PopupContent.
         /// </summary>
@@ -104,6 +113,7 @@ namespace SuperPopupSample
 
             _contentFrame = new SuperFrame
             {
+                Padding = new Thickness(0),
                 HasShadow = true,
                 Content = view
             };
@@ -120,7 +130,6 @@ namespace SuperPopupSample
 
             UpdateRequiredSize(RequiredSize);
             UpdateProportionalSize(ProportionalSize);
-            UpdateLocation(LocationRequest);
 
             _rootLayout.Children.Add(_contentFrame);
             Content = _rootLayout;
@@ -139,15 +148,6 @@ namespace SuperPopupSample
         void ClickOutsidePopupContent()
         {
             IsOpen = false;
-        }
-
-        static void OnLocationRequestPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (newValue is Point location)
-            {
-                var popup = bindable as SuperPopup;
-                popup.UpdateLocation(location);
-            }
         }
 
         void UpdateLocation(Point location)
@@ -190,13 +190,6 @@ namespace SuperPopupSample
 
                 var arrowX = Math.Min(Math.Max(location.X - x, ContentMargin * 1.5), width - ContentMargin * 1.5);
 
-                if (!RequiredSize.IsZero)
-                {
-                    width = RequiredSize.Width;
-                    height = RequiredSize.Height;
-                    AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.None);
-                }
-
                 if (!ProportionalSize.IsZero)
                 {
                     width = ProportionalSize.Width;
@@ -207,20 +200,15 @@ namespace SuperPopupSample
                 Location = new Point(x, y);
 
                 AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(x, y, width, height));
-                _contentFrame.DrawArrow(new DrawArrowRequest
-                {
-                    Location = new Point(arrowX, location.Y - y),
-                    Rotation = arrowRotation
-                });
-            }
-        }
 
-        static void OnProportionalSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (newValue is Size size)
-            {
-                var popup = bindable as SuperPopup;
-                popup.UpdateProportionalSize(size);
+                if (IsArrowVisible)
+                {
+                    _contentFrame.DrawArrow(new DrawArrowOptions
+                    {
+                        Location = new Point(arrowX, location.Y - y),
+                        Rotation = arrowRotation
+                    });
+                }
             }
         }
 
@@ -229,16 +217,7 @@ namespace SuperPopupSample
             if (_contentFrame != null && !size.IsZero)
             {
                 AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.SizeProportional);
-                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(LocationRequest.X, LocationRequest.Y, size.Width, size.Height));
-            }
-        }
-
-        static void OnRequiredSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (newValue is Size size)
-            {
-                var popup = bindable as SuperPopup;
-                popup.UpdateRequiredSize(size);
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(0, 0, size.Width, size.Height));
             }
         }
 
@@ -247,7 +226,7 @@ namespace SuperPopupSample
             if (_contentFrame != null && !size.IsZero)
             {
                 AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.None);
-                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(LocationRequest.X, LocationRequest.Y, size.Width, size.Height));
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(0, 0, size.Width, size.Height));
             }
         }
 
@@ -261,6 +240,7 @@ namespace SuperPopupSample
         {
             if (isOpen)
             {
+                UpdateLocation(LocationRequest);
                 return ShowAsync();
             }
             else

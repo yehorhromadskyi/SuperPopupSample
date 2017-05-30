@@ -22,7 +22,8 @@
 
         <local:SuperPopup x:Name="Popup"
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
-                          ProportionalSize="0.4,0.4">
+                          IsArrowVisible="True"
+                          RequiredSize="240,80">
             <Label Text="Popup with auto size"/>
         </local:SuperPopup>
     </Grid>

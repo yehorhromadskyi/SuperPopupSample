@@ -17,8 +17,8 @@ namespace SuperPopupSample.iOS
 {
     public class SuperFrameRenderer : FrameRenderer
     {
-        const int ArrowSize = 10;
-        private CAShapeLayer _triangle_Layer;
+        CAShapeLayer _triangle_Layer;
+        SuperFrame _superFrame;
 
         protected override void OnElementChanged(ElementChangedEventArgs<Frame> e)
         {
@@ -26,31 +26,36 @@ namespace SuperPopupSample.iOS
 
             if (e.OldElement != null)
             {
+                _superFrame.DrawArrowRequested -= OnDrawArrowRequest;
+
+                _superFrame = null;
                 _triangle_Layer = null;
-                (e.OldElement as SuperFrame).DrawArrowRequested -= OnDrawArrowRequest;
             }
 
             if (e.NewElement != null)
             {
-                (e.NewElement as SuperFrame).DrawArrowRequested += OnDrawArrowRequest;
+                _superFrame = e.NewElement as SuperFrame;
+
+                _superFrame.DrawArrowRequested += OnDrawArrowRequest;
             }
         }
 
-        private void OnDrawArrowRequest(object sender, DrawArrowRequest request)
+        private void OnDrawArrowRequest(object sender, DrawArrowOptions request)
         {
             DrawArrow(request);
         }
 
-        void DrawArrow(DrawArrowRequest request)
+        void DrawArrow(DrawArrowOptions request)
         {
+            var arrowSize = (float)_superFrame.ArrowSize;
             if (_triangle_Layer == null)
             {
                 _triangle_Layer = new CAShapeLayer();
                 var triangle_Path = new UIBezierPath();
 
                 triangle_Path.MoveTo(CGPoint.Empty);
-                triangle_Path.AddLineTo(new CGPoint(-ArrowSize, ArrowSize));
-                triangle_Path.AddLineTo(new CGPoint(ArrowSize, ArrowSize));
+                triangle_Path.AddLineTo(new CGPoint(-arrowSize, arrowSize));
+                triangle_Path.AddLineTo(new CGPoint(arrowSize, arrowSize));
                 triangle_Path.ClosePath();
 
                 _triangle_Layer.Path = triangle_Path.CGPath;
@@ -62,7 +67,7 @@ namespace SuperPopupSample.iOS
 
             var radians = request.Rotation * Math.PI / 180;
             _triangle_Layer.Transform = CATransform3D.MakeRotation((float)radians, 0, 0, 1);
-            _triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, ArrowSize, ArrowSize);
+            _triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, arrowSize, arrowSize);
         }
     }
 }

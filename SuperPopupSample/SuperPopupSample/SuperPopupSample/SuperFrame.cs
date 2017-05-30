@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace SuperPopupSample
 {
-    public class DrawArrowRequest
+    public class DrawArrowOptions
     {
         public Point Location { get; set; }
         public double Rotation { get; set; }
@@ -11,9 +11,21 @@ namespace SuperPopupSample
 
     public class SuperFrame : Frame
     {
-        public event EventHandler<DrawArrowRequest> DrawArrowRequested;
+        public event EventHandler<DrawArrowOptions> DrawArrowRequested;
 
-        public void DrawArrow(DrawArrowRequest request)
+        public static readonly BindableProperty ArrowSizeProperty =
+            BindableProperty.Create(nameof(ArrowSize),
+                                    typeof(double),
+                                    typeof(SuperFrame),
+                                    10d);
+
+        public double ArrowSize
+        {
+            get { return (double)GetValue(ArrowSizeProperty); }
+            set { SetValue(ArrowSizeProperty, value); }
+        }
+
+        public void DrawArrow(DrawArrowOptions request)
         {
             DrawArrowRequested?.Invoke(this, request);
         }
