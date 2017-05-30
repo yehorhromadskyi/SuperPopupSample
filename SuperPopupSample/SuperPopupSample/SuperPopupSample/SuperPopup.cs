@@ -49,7 +49,7 @@ namespace SuperPopupSample
                                     typeof(bool),
                                     typeof(SuperPopup),
                                     false);
-        
+
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
@@ -115,7 +115,8 @@ namespace SuperPopupSample
             {
                 Padding = new Thickness(0),
                 HasShadow = true,
-                Content = view
+                Content = view,
+                BackgroundColor = Color.White
             };
 
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
@@ -199,7 +200,7 @@ namespace SuperPopupSample
                     _contentFrame.DrawArrow(new ArrowOptions
                     {
                         Location = new Point(arrowX, location.Y - y),
-                        Rotation = arrowRotation,
+                        RotationAngle = arrowRotation,
                         Size = ContentMargin,
                         Color = Color.White
                     });
@@ -225,10 +226,13 @@ namespace SuperPopupSample
             }
         }
 
-        static async void OnIsOpenPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        static void OnIsOpenPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var popup = bindable as SuperPopup;
-            await popup.UpdateIsOpen((bool)newValue);
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await popup.UpdateIsOpen((bool)newValue);
+            });
         }
 
         Task UpdateIsOpen(bool isOpen)

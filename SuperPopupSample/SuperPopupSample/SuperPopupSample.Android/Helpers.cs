@@ -12,6 +12,11 @@ namespace SuperPopupSample.Droid
             return point;
         }
 
+        public static double DpToPx(double dp, Android.Util.DisplayMetrics displayMetrics)
+        {
+            return dp * displayMetrics.Density;
+        }
+
         public static int GetStatusBarHeight(Context context)
         {
             var statusBarHeight = 0;

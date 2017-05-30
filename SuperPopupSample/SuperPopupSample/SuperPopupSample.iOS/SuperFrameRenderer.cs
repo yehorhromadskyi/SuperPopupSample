@@ -55,7 +55,7 @@ namespace SuperPopupSample.iOS
             triangle_Layer.FillColor = request.Color.ToCGColor();
             triangle_Layer.AnchorPoint = CGPoint.Empty;
 
-            var radians = request.Rotation * Math.PI / 180;
+            var radians = request.RotationAngle * Math.PI / 180;
             triangle_Layer.Transform = CATransform3D.MakeRotation((float)radians, 0, 0, 1);
             triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, arrowSize, arrowSize);
 
