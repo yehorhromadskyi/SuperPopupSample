@@ -4,5 +4,35 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SuperPopupSample.UWP"
     RequestedTheme="Light">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ArrowedContentViewStyle" TargetType="ContentControl">
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ContentControl">
+                            <Grid>
+                                <ContentPresenter
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    Margin="{TemplateBinding Padding}"
+                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
+                                <Path Width="18" Height="24" Stretch="Fill" Stroke="Red" Fill="Red" 
+                                  Data="F1 M 319.344,237.333L 287.328,218.849L 287.328,255.818L 319.344,237.333 Z "
+                                      RenderTransformOrigin="0.5,0.5">
+                                    <Path.RenderTransform>
+                                        <CompositeTransform/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
