@@ -1,5 +1,5 @@
-# Custom popup on Xamarin.Forms
+# Popup implementation on Xamarin.Forms
 
-Container for custom content, which has popup behavior. iOS, Android and UWP.
+Implementation of popup for iOS, Android and UWP. Implemented logic of detection user touch location for showing popup in that place.
 
 ![Android](https://github.com/gromadskyi/SuperPopupSample/blob/master/SuperPopupSample/popup_droid.gif)
