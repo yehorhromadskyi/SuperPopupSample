@@ -21,7 +21,7 @@
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
-                                <Path Width="18" Height="24" Stretch="Fill" Stroke="Red" Fill="Red" 
+                                <Path Width="12" Height="24" Stretch="Fill" Fill="White" 
                                   Data="F1 M 319.344,237.333L 287.328,218.849L 287.328,255.818L 319.344,237.333 Z "
                                       RenderTransformOrigin="0.5,0.5">
                                     <Path.RenderTransform>

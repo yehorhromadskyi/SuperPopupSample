@@ -1,19 +1,17 @@
 ﻿using SuperPopupSample;
 using SuperPopupSample.UWP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
 [assembly: ExportRenderer(typeof(SuperFrame), typeof(SuperFrameRenderer))]
 namespace SuperPopupSample.UWP
 {
-    public class SuperFrameRenderer : ViewRenderer<ContentView, Windows.UI.Xaml.Controls.ContentControl>
+    public sealed class SuperFrameRenderer : ViewRenderer<ContentView, Windows.UI.Xaml.Controls.ContentControl>
     {
         SuperFrame _superFrame;
+        Windows.UI.Xaml.Media.CompositeTransform _arrowTransform;
+        Windows.UI.Xaml.Controls.ContentControl _contentControl;
+        Windows.UI.Xaml.Shapes.Path _arrowPath;
 
         protected override void OnElementChanged(ElementChangedEventArgs<ContentView> e)
         {
@@ -22,6 +20,9 @@ namespace SuperPopupSample.UWP
                 _superFrame.DrawArrowRequested -= OnDrawArrowRequest;
 
                 _superFrame = null;
+                _arrowTransform = null;
+                _contentControl = null;
+                _arrowPath = null;
             }
 
             if (e.NewElement != null)
@@ -32,15 +33,15 @@ namespace SuperPopupSample.UWP
 
                 if (Control == null)
                 {
-                    var contentControl = new Windows.UI.Xaml.Controls.ContentControl();
+                    _contentControl = new Windows.UI.Xaml.Controls.ContentControl();
 
                     var style = App.Current.Resources["ArrowedContentViewStyle"] as Windows.UI.Xaml.Style;
                     if (style != null)
                     {
-                        contentControl.Style = style;
+                        _contentControl.Style = style;
                     }
 
-                    SetNativeControl(contentControl);
+                    SetNativeControl(_contentControl);
                 }
             }
 
@@ -54,26 +55,36 @@ namespace SuperPopupSample.UWP
 
         private void DrawArrow(ArrowOptions options)
         {
-            for (int i = 0; i < Windows.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(Control); i++)
+            if (_arrowTransform == null || _arrowPath == null)
             {
-                var child = Windows.UI.Xaml.Media.VisualTreeHelper.GetChild(Control, i);
-                for (int j = 0; j < Windows.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(child); j++)
-                {
-                    var gridChild = Windows.UI.Xaml.Media.VisualTreeHelper.GetChild(child, j);
-                    if (gridChild is Windows.UI.Xaml.Shapes.Path path)
-                    {
-                        var rotateTransform = path.RenderTransform as Windows.UI.Xaml.Media.CompositeTransform;
-                        rotateTransform.Rotation = options.RotationAngle - 90;
-                        //rotateTransform.TranslateX = options.Location.X;
-                        //rotateTransform.TranslateY = options.Location.Y;
-                        var y = options.Location.Y - _superFrame.Height / 2;
-                        var x = options.Location.X - _superFrame.Width / 2;
-                        System.Diagnostics.Debug.WriteLine($"---------------X: {x}");
-                        rotateTransform.TranslateX = x;
-                        rotateTransform.TranslateY = y;
-                    }
-                }
+                _arrowPath = _contentControl.GetVisualChild<Windows.UI.Xaml.Shapes.Path>();
+                _arrowPath.Fill = new Windows.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(
+                        (byte)(_superFrame.ArrowColor.A * 255),
+                        (byte)(_superFrame.ArrowColor.R * 255),
+                        (byte)(_superFrame.ArrowColor.G * 255),
+                        (byte)(_superFrame.ArrowColor.B * 255)));
+                _arrowTransform = _arrowPath.RenderTransform as Windows.UI.Xaml.Media.CompositeTransform;
             }
+
+            var angle = 0;
+            var x = options.Location.X - _superFrame.Width / 2;
+            var y = options.Location.Y - _superFrame.Height / 2;
+
+            switch (options.Direction)
+            {
+                case ArrowDirection.Up:
+                    y += _arrowPath.Width / 2;
+                    break;
+                case ArrowDirection.Down:
+                    y -= _arrowPath.Width / 2;
+                    angle = 180;
+                    break;
+            }
+
+            _arrowTransform.Rotation = angle - 90;
+            _arrowTransform.TranslateX = x;
+            _arrowTransform.TranslateY = y;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace SuperPopupSample.iOS
 {
     public class SuperFrameRenderer : FrameRenderer
     {
+        const float ArrowSize = 10;
+
         CAShapeLayer _triangle_Layer;
         SuperFrame _superFrame;
 
@@ -45,19 +47,19 @@ namespace SuperPopupSample.iOS
             var triangle_Layer = new CAShapeLayer();
             var triangle_Path = new UIBezierPath();
 
-            var arrowSize = (float)request.Size;
             triangle_Path.MoveTo(CGPoint.Empty);
-            triangle_Path.AddLineTo(new CGPoint(-arrowSize, arrowSize));
-            triangle_Path.AddLineTo(new CGPoint(arrowSize, arrowSize));
+            triangle_Path.AddLineTo(new CGPoint(-ArrowSize, ArrowSize));
+            triangle_Path.AddLineTo(new CGPoint(ArrowSize, ArrowSize));
             triangle_Path.ClosePath();
 
             triangle_Layer.Path = triangle_Path.CGPath;
-            triangle_Layer.FillColor = request.Color.ToCGColor();
+            triangle_Layer.FillColor = _superFrame.ArrowColor.ToCGColor();
             triangle_Layer.AnchorPoint = CGPoint.Empty;
 
-            var radians = request.RotationAngle * Math.PI / 180;
+            var angle = request.Direction == ArrowDirection.Down ? 180 : 0;
+            var radians = angle * Math.PI / 180;
             triangle_Layer.Transform = CATransform3D.MakeRotation((float)radians, 0, 0, 1);
-            triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, arrowSize, arrowSize);
+            triangle_Layer.Frame = new CGRect(request.Location.X, request.Location.Y, ArrowSize, ArrowSize);
 
             if (_triangle_Layer != null)
             {

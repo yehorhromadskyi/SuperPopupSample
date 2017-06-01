@@ -10,6 +10,8 @@ namespace SuperPopupSample.Droid
 {
     public class SuperFrameRenderer : FrameRenderer
     {
+        const double ArrowSize = 10;
+
         SuperFrame _superFrame;
         ArrowOptions _arrowOptions;
 
@@ -49,14 +51,16 @@ namespace SuperPopupSample.Droid
             {
                 var paint = new Paint()
                 {
-                    Color = _arrowOptions.Color.ToAndroid()
+                    Color =  _superFrame.ArrowColor.ToAndroid()
                 };
 
                 var x = Helpers.DpToPx(_arrowOptions.Location.X, ViewGroup.Context.Resources.DisplayMetrics);
                 var y = Helpers.DpToPx(_arrowOptions.Location.Y, ViewGroup.Context.Resources.DisplayMetrics);
-                var size = Helpers.DpToPx(_arrowOptions.Size, ViewGroup.Context.Resources.DisplayMetrics);
+                var size = Helpers.DpToPx(ArrowSize, ViewGroup.Context.Resources.DisplayMetrics);
 
-                DrawTriangle(canvas, paint, (float)x, (float)y, (float)size, (float)_arrowOptions.RotationAngle);
+                var angle = _arrowOptions.Direction == ArrowDirection.Down ? 180f : 0f;
+
+                DrawTriangle(canvas, paint, (float)x, (float)y, (float)size, angle);
             }
 
             base.OnDraw(canvas);

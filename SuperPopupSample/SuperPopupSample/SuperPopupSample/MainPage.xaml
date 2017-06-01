@@ -24,8 +24,7 @@
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
                           IsArrowVisible="True"
                           RequiredSize="240,80">
-            <Frame OutlineColor="Red"
-                   BackgroundColor="Transparent">
+            <Frame BackgroundColor="White">
                 <Label Text="Popup with auto size"/>
             </Frame>
         </local:SuperPopup>

@@ -7,7 +7,7 @@ namespace SuperPopupSample
     [ContentProperty(nameof(PopupContent))]
     public class SuperPopup : ContentView
     {
-        public const double ContentMargin = 10;
+        const double ContentMargin = 10;
 
         AbsoluteLayout _rootLayout;
         SuperFrame _contentFrame;
@@ -114,9 +114,8 @@ namespace SuperPopupSample
             _contentFrame = new SuperFrame
             {
                 Padding = new Thickness(0),
-                HasShadow = true,
-                Content = view,
-                BackgroundColor = Color.White
+                HasShadow = false,
+                Content = view
             };
 
             _rootLayout.GestureRecognizers.Add(new TapGestureRecognizer
@@ -155,7 +154,7 @@ namespace SuperPopupSample
         {
             if (_contentFrame != null)
             {
-                var arrowRotation = 0;
+                var arrowOptions = new ArrowOptions();
                 var x = location.X;
                 var y = location.Y;
                 var width = _contentFrame.Width;
@@ -175,14 +174,18 @@ namespace SuperPopupSample
                 if (y + height + ContentMargin * 2 > _rootLayout.Height)
                 {
                     y = y - height - ContentMargin;
-                    arrowRotation = 180;
+                    arrowOptions.Direction = ArrowDirection.Down;
                 }
                 else
                 {
                     y += ContentMargin;
                 }
 
-                var arrowX = Math.Min(Math.Max(location.X - x, ContentMargin * 1.5), width - ContentMargin * 1.5);
+                arrowOptions.Location = new Point
+                {
+                    X = Math.Min(Math.Max(location.X - x, ContentMargin * 1.5d), width - ContentMargin * 1.5d),
+                    Y = location.Y - y
+                };
 
                 if (!ProportionalSize.IsZero)
                 {
@@ -197,13 +200,7 @@ namespace SuperPopupSample
 
                 if (IsArrowVisible)
                 {
-                    _contentFrame.DrawArrow(new ArrowOptions
-                    {
-                        Location = new Point(arrowX, location.Y - y),
-                        RotationAngle = arrowRotation,
-                        Size = ContentMargin,
-                        Color = Color.White
-                    });
+                    _contentFrame.DrawArrow(arrowOptions);
                 }
             }
         }
