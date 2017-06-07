@@ -173,8 +173,15 @@ namespace SuperPopupSample
                 // crossed the bottom edge of the screen
                 if (y + height + ContentMargin * 2 > _rootLayout.Height)
                 {
-                    y = y - height - ContentMargin;
-                    arrowOptions.Direction = ArrowDirection.Down;
+                    if (y - height - ContentMargin >= 0)
+                    {
+                        y = y - height - ContentMargin;
+                        arrowOptions.Direction = ArrowDirection.Down;
+                    }
+                    else
+                    {
+                        y += ContentMargin;
+                    }
                 }
                 else
                 {

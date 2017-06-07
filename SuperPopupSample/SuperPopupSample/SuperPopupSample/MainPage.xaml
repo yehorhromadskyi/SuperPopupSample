@@ -23,7 +23,7 @@
         <local:SuperPopup x:Name="Popup"
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
                           IsArrowVisible="True"
-                          RequiredSize="240,80">
+                          ProportionalSize="0.3,0.9">
             <Frame BackgroundColor="White">
                 <Label Text="Popup with auto size"/>
             </Frame>
