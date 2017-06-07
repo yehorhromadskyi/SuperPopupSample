@@ -12,12 +12,20 @@ namespace SuperPopupSample
         AbsoluteLayout _rootLayout;
         SuperFrame _contentFrame;
 
+        double yOffset;
+
         public static readonly BindableProperty PopupContentProperty =
             BindableProperty.Create(nameof(PopupContent),
                                     typeof(View),
                                     typeof(SuperPopup),
                                     default(View),
                                     propertyChanged: OnPopupContentPropertyChanged);
+
+        public static readonly BindableProperty PlacementProperty =
+            BindableProperty.Create(nameof(Placement),
+                                    typeof(Placement),
+                                    typeof(SuperPopup),
+                                    Placement.LocationRequest);
 
         public static readonly BindableProperty LocationRequestProperty =
             BindableProperty.Create(nameof(LocationRequest),
@@ -54,6 +62,12 @@ namespace SuperPopupSample
         {
             get { return (View)GetValue(PopupContentProperty); }
             set { SetValue(PopupContentProperty, value); }
+        }
+
+        public Placement Placement
+        {
+            get { return (Placement)GetValue(PlacementProperty); }
+            set { SetValue(PlacementProperty, value); }
         }
 
         public Point LocationRequest
@@ -95,6 +109,24 @@ namespace SuperPopupSample
 
         public SuperPopup()
         {
+        }
+
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+
+            if (_rootLayout != null)
+            {
+                var y = _rootLayout.Y;
+                var parent = (VisualElement)_rootLayout.Parent;
+                while (parent != null)
+                {
+                    y += parent.Y;
+                    parent = parent.Parent as VisualElement;
+                }
+
+                yOffset = y;
+            }
         }
 
         static void OnPopupContentPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -156,42 +188,16 @@ namespace SuperPopupSample
             {
                 var arrowOptions = new ArrowOptions();
                 var x = location.X;
-                var y = location.Y;
+                var y = location.Y - yOffset;
                 var width = _contentFrame.Width;
                 var height = _contentFrame.Height;
 
-                // crossed the right edge of the screen
-                if (x + width / 2 + ContentMargin > _rootLayout.Width)
-                {
-                    x = _rootLayout.Width - width - ContentMargin;
-                }
-                else
-                {
-                    x = Math.Max(x - width / 2, ContentMargin);
-                }
-
-                // crossed the bottom edge of the screen
-                if (y + height + ContentMargin * 2 > _rootLayout.Height)
-                {
-                    if (y - height - ContentMargin >= 0)
-                    {
-                        y = y - height - ContentMargin;
-                        arrowOptions.Direction = ArrowDirection.Down;
-                    }
-                    else
-                    {
-                        y += ContentMargin;
-                    }
-                }
-                else
-                {
-                    y += ContentMargin;
-                }
+                CalculateLocation(arrowOptions, ref x, ref y, width, height);
 
                 arrowOptions.Location = new Point
                 {
                     X = Math.Min(Math.Max(location.X - x, ContentMargin * 1.5d), width - ContentMargin * 1.5d),
-                    Y = location.Y - y
+                    Y = location.Y - y - yOffset
                 };
 
                 if (!ProportionalSize.IsZero)
@@ -209,6 +215,59 @@ namespace SuperPopupSample
                 {
                     _contentFrame.DrawArrow(arrowOptions);
                 }
+            }
+        }
+
+        private void CalculateLocation(ArrowOptions arrowOptions, ref double x, ref double y, double width, double height)
+        {
+            switch (Placement)
+            {
+                case Placement.LocationRequest:
+                    // crossed the right edge of the screen
+                    if (x + width / 2 + ContentMargin > _rootLayout.Width)
+                    {
+                        x = _rootLayout.Width - width - ContentMargin;
+                    }
+                    else
+                    {
+                        x = Math.Max(x - width / 2, ContentMargin);
+                    }
+
+                    // crossed the bottom edge of the screen
+                    if (y + height + ContentMargin * 2 > _rootLayout.Height)
+                    {
+                        if (y - height - ContentMargin >= 0)
+                        {
+                            y = y - height - ContentMargin;
+                            arrowOptions.Direction = ArrowDirection.Down;
+                        }
+                        else
+                        {
+                            y += ContentMargin;
+                        }
+                    }
+                    else
+                    {
+                        y += ContentMargin;
+                    }
+
+                    break;
+
+                case Placement.PageCenter:
+                    if (width >= _rootLayout.Width)
+                    {
+                        x = 0;
+                    }
+
+                    if (height >= _rootLayout.Height)
+                    {
+                        y = 0;
+                    }
+
+                    x = (_rootLayout.Width - width) / 2;
+                    y = (_rootLayout.Height - height) / 2;
+
+                    break;
             }
         }
 

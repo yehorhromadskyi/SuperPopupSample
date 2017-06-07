@@ -43,6 +43,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPageViewModel.cs" />
+    <Compile Include="Placement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuperContentPage.cs" />
     <Compile Include="SuperPopup.cs" />

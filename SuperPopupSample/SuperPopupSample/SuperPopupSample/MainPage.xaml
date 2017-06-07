@@ -12,20 +12,18 @@
                 <TapGestureRecognizer Command="{Binding ShowPopupCommand}"
                                       NumberOfTapsRequired="1"/>
             </Grid.GestureRecognizers>
-            
-            <StackLayout Orientation="Horizontal"
-                         VerticalOptions="Center"
-                         BackgroundColor="Aquamarine">
-                <Label Text="Popup"/>
-            </StackLayout>
+
+            <Label Text="Canvas"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
         </Grid>
 
         <local:SuperPopup x:Name="Popup"
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
-                          IsArrowVisible="True"
-                          ProportionalSize="0.3,0.9">
+                          Placement="PageCenter"
+                          ProportionalSize="0.8,0.6">
             <Frame BackgroundColor="White">
-                <Label Text="Popup with auto size"/>
+                <Label Text="Popup"/>
             </Frame>
         </local:SuperPopup>
     </Grid>
