@@ -58,6 +58,13 @@ namespace SuperPopupSample
                                     typeof(SuperPopup),
                                     false);
 
+
+        public static readonly BindableProperty AnimateProperty =
+            BindableProperty.Create(nameof(Animate),
+                                    typeof(bool),
+                                    typeof(SuperPopup),
+                                    true);
+
         public View PopupContent
         {
             get { return (View)GetValue(PopupContentProperty); }
@@ -100,6 +107,12 @@ namespace SuperPopupSample
         {
             get { return (bool)GetValue(IsArrowVisibleProperty); }
             set { SetValue(IsArrowVisibleProperty, value); }
+        }
+
+        public bool Animate
+        {
+            get { return (bool)GetValue(AnimateProperty); }
+            set { SetValue(AnimateProperty, value); }
         }
 
         /// <summary>
@@ -313,22 +326,38 @@ namespace SuperPopupSample
 
         async Task ShowAsync()
         {
-            _contentFrame.Scale = 0;
+            if (Animate)
+            {
+                _contentFrame.Scale = 0;
+            }
+
             Opacity = 1;
             InputTransparent = false;
             _rootLayout.Opacity = 1;
             _rootLayout.InputTransparent = false;
-            await _contentFrame.ScaleTo(1, 100);
+
+            if (Animate)
+            {
+                await _contentFrame.ScaleTo(1, 100);
+            }
         }
 
         async Task HideAsync()
         {
-            await _contentFrame.ScaleTo(0, 100);
+            if (Animate)
+            {
+                await _contentFrame.ScaleTo(0, 100);
+            }
+
             Opacity = 0;
             InputTransparent = true;
             _rootLayout.Opacity = 0;
             _rootLayout.InputTransparent = true;
-            _contentFrame.Scale = 1;
+
+            if (Animate)
+            {
+                _contentFrame.Scale = 1;
+            }
         }
     }
 }
