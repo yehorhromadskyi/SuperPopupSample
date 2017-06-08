@@ -58,12 +58,17 @@ namespace SuperPopupSample
                                     typeof(SuperPopup),
                                     false);
 
-
         public static readonly BindableProperty AnimateProperty =
             BindableProperty.Create(nameof(Animate),
                                     typeof(bool),
                                     typeof(SuperPopup),
                                     true);
+
+        public static readonly BindableProperty TargetProperty =
+            BindableProperty.Create(nameof(Target),
+                                    typeof(View),
+                                    typeof(SuperPopup),
+                                    null);
 
         public View PopupContent
         {
@@ -115,6 +120,12 @@ namespace SuperPopupSample
             set { SetValue(AnimateProperty, value); }
         }
 
+        public View Target
+        {
+            get { return (View)GetValue(TargetProperty); }
+            set { SetValue(TargetProperty, value); }
+        }
+
         /// <summary>
         /// Coordinates of the Top-Left corner of PopupContent.
         /// </summary>
@@ -128,18 +139,9 @@ namespace SuperPopupSample
         {
             base.OnSizeAllocated(width, height);
 
-            if (_rootLayout != null)
-            {
-                var y = _rootLayout.Y;
-                var parent = (VisualElement)_rootLayout.Parent;
-                while (parent != null)
-                {
-                    y += parent.Y;
-                    parent = parent.Parent as VisualElement;
-                }
+            var absolutePosition = CalculateAbsolutePosition(_rootLayout);
 
-                yOffset = y;
-            }
+            yOffset = absolutePosition.Y;
         }
 
         static void OnPopupContentPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -195,23 +197,15 @@ namespace SuperPopupSample
             IsOpen = false;
         }
 
-        void UpdateLocation(Point location)
+        void UpdateLocation()
         {
             if (_contentFrame != null)
             {
-                var arrowOptions = new ArrowOptions();
-                var x = location.X;
-                var y = location.Y - yOffset;
+                ArrowOptions arrowOptions;
                 var width = _contentFrame.Width;
                 var height = _contentFrame.Height;
 
-                CalculateLocation(arrowOptions, ref x, ref y, width, height);
-
-                arrowOptions.Location = new Point
-                {
-                    X = Math.Min(Math.Max(location.X - x, ContentMargin * 1.5d), width - ContentMargin * 1.5d),
-                    Y = location.Y - y - yOffset
-                };
+                Location = CalculateLocation(width, height, out arrowOptions);
 
                 if (!ProportionalSize.IsZero)
                 {
@@ -220,9 +214,7 @@ namespace SuperPopupSample
                     AbsoluteLayout.SetLayoutFlags(_contentFrame, AbsoluteLayoutFlags.SizeProportional);
                 }
 
-                Location = new Point(x, y);
-
-                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(x, y, width, height));
+                AbsoluteLayout.SetLayoutBounds(_contentFrame, new Rectangle(Location.X, Location.Y, width, height));
 
                 if (IsArrowVisible)
                 {
@@ -231,27 +223,34 @@ namespace SuperPopupSample
             }
         }
 
-        private void CalculateLocation(ArrowOptions arrowOptions, ref double x, ref double y, double width, double height)
+        Point CalculateLocation(double popupWindowWidth, double popupWindowHeight, out ArrowOptions arrowOptions)
         {
+            var x = 0d;
+            var y = 0d;
+            arrowOptions = new ArrowOptions();
+
             switch (Placement)
             {
                 case Placement.LocationRequest:
+                    x = LocationRequest.X;
+                    y = LocationRequest.Y - yOffset;
+
                     // crossed the right edge of the screen
-                    if (x + width / 2 + ContentMargin > _rootLayout.Width)
+                    if (x + popupWindowWidth / 2 + ContentMargin > _rootLayout.Width)
                     {
-                        x = _rootLayout.Width - width - ContentMargin;
+                        x = _rootLayout.Width - popupWindowWidth - ContentMargin;
                     }
                     else
                     {
-                        x = Math.Max(x - width / 2, ContentMargin);
+                        x = Math.Max(x - popupWindowWidth / 2, ContentMargin);
                     }
 
                     // crossed the bottom edge of the screen
-                    if (y + height + ContentMargin * 2 > _rootLayout.Height)
+                    if (y + popupWindowHeight + ContentMargin * 2 > _rootLayout.Height)
                     {
-                        if (y - height - ContentMargin >= 0)
+                        if (y - popupWindowHeight - ContentMargin >= 0)
                         {
-                            y = y - height - ContentMargin;
+                            y = y - popupWindowHeight - ContentMargin;
                             arrowOptions.Direction = ArrowDirection.Down;
                         }
                         else
@@ -264,24 +263,88 @@ namespace SuperPopupSample
                         y += ContentMargin;
                     }
 
+                    arrowOptions.Location = new Point
+                    {
+                        X = Math.Min(Math.Max(LocationRequest.X - x, ContentMargin * 1.5d), popupWindowWidth - ContentMargin * 1.5d),
+                        Y = LocationRequest.Y - y - yOffset
+                    };
+
                     break;
 
                 case Placement.PageCenter:
-                    if (width >= _rootLayout.Width)
+                    if (popupWindowWidth < _rootLayout.Width)
                     {
-                        x = 0;
+                        x = (_rootLayout.Width - popupWindowWidth) / 2;
                     }
 
-                    if (height >= _rootLayout.Height)
+                    if (popupWindowHeight < _rootLayout.Height)
                     {
-                        y = 0;
+                        y = (_rootLayout.Height - popupWindowHeight) / 2;
                     }
 
-                    x = (_rootLayout.Width - width) / 2;
-                    y = (_rootLayout.Height - height) / 2;
+                    arrowOptions.Location = new Point
+                    {
+                        X = popupWindowWidth / 2,
+                        Y = -ContentMargin
+                    };
+
+                    break;
+
+                case Placement.BelowTargetAtCenter:
+                case Placement.BelowTargetAtLeft:
+                case Placement.BelowTargetAtRight:
+                    if (Target != null)
+                    {
+                        var popupPosition = CalculatePositionRelatedToTarget(popupWindowWidth, out arrowOptions);
+                        x = popupPosition.X;
+                        y = popupPosition.Y;
+                    }
 
                     break;
             }
+
+            return new Point(x, y);
+        }
+
+        private Point CalculatePositionRelatedToTarget(double popupWindowWidth, out ArrowOptions arrowOptions)
+        {
+            var targetPosition = CalculateAbsolutePosition(Target);
+
+            arrowOptions = new ArrowOptions();
+            var x = 0d;
+            var y = targetPosition.Y + Target.Bounds.Height + ContentMargin;
+
+            switch (Placement)
+            {
+                case Placement.BelowTargetAtCenter:
+                    x = targetPosition.X - (popupWindowWidth / 2) + Target.Bounds.Width / 2;
+                    arrowOptions.Location = new Point
+                    {
+                        X = popupWindowWidth / 2,
+                        Y = -ContentMargin
+                    };
+                    break;
+
+                case Placement.BelowTargetAtLeft:
+                    x = targetPosition.X;
+                    arrowOptions.Location = new Point
+                    {
+                        X = ContentMargin * 1.5,
+                        Y = -ContentMargin
+                    };
+                    break;
+
+                case Placement.BelowTargetAtRight:
+                    x = targetPosition.X - popupWindowWidth + Target.Bounds.Width;
+                    arrowOptions.Location = new Point
+                    {
+                        X = popupWindowWidth - ContentMargin * 1.5,
+                        Y = -ContentMargin
+                    };
+                    break;
+            }
+
+            return new Point(x, y);
         }
 
         void UpdateProportionalSize(Size size)
@@ -315,7 +378,7 @@ namespace SuperPopupSample
         {
             if (isOpen)
             {
-                UpdateLocation(LocationRequest);
+                UpdateLocation();
                 return ShowAsync();
             }
             else
@@ -358,6 +421,26 @@ namespace SuperPopupSample
             {
                 _contentFrame.Scale = 1;
             }
+        }
+
+        Point CalculateAbsolutePosition(VisualElement view)
+        {
+            if (view == null)
+            {
+                return Point.Zero;
+            }
+
+            var x = view.X;
+            var y = view.Y;
+            var parent = view.Parent as VisualElement;
+            while (parent != null)
+            {
+                x += parent.X;
+                y += parent.Y;
+                parent = parent.Parent as VisualElement;
+            }
+
+            return new Point(x, y);
         }
     }
 }

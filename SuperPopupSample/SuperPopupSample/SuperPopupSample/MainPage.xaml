@@ -13,15 +13,27 @@
                                       NumberOfTapsRequired="1"/>
             </Grid.GestureRecognizers>
 
-            <Label Text="Canvas"
+            <Grid VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  BackgroundColor="Yellow"
+                  Padding="50">
+                <Frame x:Name="canvas" HorizontalOptions="Center" VerticalOptions="Center"
+                       BackgroundColor="White">
+                    <Label
+                   Text="Canvas"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"/>
+                </Frame>
+            </Grid>
         </Grid>
 
         <local:SuperPopup x:Name="Popup"
+                          Animate="True"
+                          Target="{Binding Source={x:Reference canvas}}"
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
-                          Placement="PageCenter"
-                          ProportionalSize="0.8,0.6">
+                          Placement="BelowTargetAtRight"
+                          RequiredSize="200,100"
+                          IsArrowVisible="True">
             <Frame BackgroundColor="White">
                 <Label Text="Popup"/>
             </Frame>

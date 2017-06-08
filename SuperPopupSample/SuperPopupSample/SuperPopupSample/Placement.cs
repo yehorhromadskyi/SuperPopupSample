@@ -3,6 +3,9 @@
     public enum Placement
     {
         LocationRequest,
-        PageCenter
+        PageCenter,
+        BelowTargetAtCenter,
+        BelowTargetAtLeft,
+        BelowTargetAtRight
     }
 }
