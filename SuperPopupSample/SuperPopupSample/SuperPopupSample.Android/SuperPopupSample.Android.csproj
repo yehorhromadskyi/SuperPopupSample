@@ -103,6 +103,7 @@
     <Compile Include="SuperContentPageRenderer.cs" />
     <Compile Include="SuperFrameRenderer.cs" />
     <Compile Include="TapGestureEffect.cs" />
+    <Compile Include="ViewManagerImplementation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -13,25 +13,47 @@
                                       NumberOfTapsRequired="1"/>
             </Grid.GestureRecognizers>
 
-            <Grid VerticalOptions="Center"
+            <ScrollView>
+                <StackLayout>
+                    <Grid HeightRequest="400"
+                          BackgroundColor="Blue">
+                        <Label />
+                    </Grid>
+
+                    <Button Text="Show"
+                            Command="{Binding ShowPopupCommand}"/>
+                    
+                    <Grid VerticalOptions="Center"
                   HorizontalOptions="Center"
-                  BackgroundColor="Yellow"
+                  BackgroundColor="Black"
                   Padding="50">
-                <Frame x:Name="canvas" HorizontalOptions="Center" VerticalOptions="Center"
+                        <Frame x:Name="canvas" HorizontalOptions="Center" VerticalOptions="Center"
                        BackgroundColor="White">
-                    <Label
+                            <Label
                    Text="Canvas"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"/>
-                </Frame>
-            </Grid>
+                        </Frame>
+                    </Grid>
+
+                    <Grid HeightRequest="400"
+                          BackgroundColor="Blue">
+                        <Label />
+                    </Grid>
+
+                    <Grid HeightRequest="400"
+                          BackgroundColor="Blue">
+                        <Label />
+                    </Grid>
+                </StackLayout>
+            </ScrollView>
         </Grid>
 
         <local:SuperPopup x:Name="Popup"
                           Animate="True"
                           Target="{Binding Source={x:Reference canvas}}"
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
-                          Placement="BelowTargetAtRight"
+                          Placement="BelowTargetAtCenter"
                           RequiredSize="200,100"
                           IsArrowVisible="True">
             <Frame BackgroundColor="White">

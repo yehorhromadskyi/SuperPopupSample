@@ -9,6 +9,8 @@ namespace SuperPopupSample
     {
         const double ContentMargin = 10;
 
+        readonly IViewManager _viewManager;
+
         AbsoluteLayout _rootLayout;
         SuperFrame _contentFrame;
 
@@ -133,13 +135,14 @@ namespace SuperPopupSample
 
         public SuperPopup()
         {
+            _viewManager = DependencyService.Get<IViewManager>();
         }
 
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
 
-            var absolutePosition = CalculateAbsolutePosition(_rootLayout);
+            var absolutePosition = GetLocationOnPage(_rootLayout);
 
             yOffset = absolutePosition.Y;
         }
@@ -296,6 +299,7 @@ namespace SuperPopupSample
                     if (Target != null)
                     {
                         var popupPosition = CalculatePositionRelatedToTarget(popupWindowWidth, out arrowOptions);
+
                         x = popupPosition.X;
                         y = popupPosition.Y;
                     }
@@ -308,7 +312,7 @@ namespace SuperPopupSample
 
         private Point CalculatePositionRelatedToTarget(double popupWindowWidth, out ArrowOptions arrowOptions)
         {
-            var targetPosition = CalculateAbsolutePosition(Target);
+            var targetPosition = _viewManager.GetLocationOnScreen(Target);
 
             arrowOptions = new ArrowOptions();
             var x = 0d;
@@ -423,7 +427,7 @@ namespace SuperPopupSample
             }
         }
 
-        Point CalculateAbsolutePosition(VisualElement view)
+        Point GetLocationOnPage(VisualElement view)
         {
             if (view == null)
             {
