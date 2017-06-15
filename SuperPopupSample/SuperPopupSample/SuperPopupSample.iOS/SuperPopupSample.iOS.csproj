@@ -90,6 +90,9 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="PopupManagerImplementation.cs" />
+    <Compile Include="PopupViewController.cs" />
+    <Compile Include="ScreenManagerImplementation.cs" />
     <Compile Include="SuperContentPageRenderer.cs" />
     <Compile Include="TapGestureEffect.cs" />
     <Compile Include="SuperFrameRenderer.cs" />
