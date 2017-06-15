@@ -79,11 +79,11 @@ namespace SuperPopupSample.Droid
                         break;
                 }
 
-                var convertedX = Helpers.DpToPx(x, ViewGroup.Context.Resources.DisplayMetrics);
-                var convertedY = Helpers.DpToPx(y, ViewGroup.Context.Resources.DisplayMetrics);
-                var size = Helpers.DpToPx(ArrowSize, ViewGroup.Context.Resources.DisplayMetrics);
+                var convertedX = ViewGroup.Context.ToPixels(x);
+                var convertedY = ViewGroup.Context.ToPixels(y);
+                var size = ViewGroup.Context.ToPixels(ArrowSize);
 
-                DrawTriangle(canvas, paint, (float)convertedX, (float)convertedY, (float)size, angle);
+                DrawTriangle(canvas, paint, convertedX, convertedY, size, angle);
             }
 
             base.OnDraw(canvas);
