@@ -37,12 +37,12 @@ namespace SuperPopupSample.iOS
             }
         }
 
-        private void OnDrawArrowRequest(object sender, ArrowOptions request)
+        private void OnDrawArrowRequest(object sender, ArrowPlacement request)
         {
             DrawArrow(request);
         }
 
-        void DrawArrow(ArrowOptions request)
+        void DrawArrow(ArrowPlacement request)
         {
             var triangle_Layer = new CAShapeLayer();
             var triangle_Path = new UIBezierPath();

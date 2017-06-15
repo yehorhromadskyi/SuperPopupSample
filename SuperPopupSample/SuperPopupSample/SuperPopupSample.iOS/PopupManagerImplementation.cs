@@ -19,7 +19,7 @@ namespace SuperPopupSample.iOS
             var popupViewController = new PopupViewController(popup);
 
             popover = new UIPopoverController(popupViewController);
-            popover.PresentFromRect(new CoreGraphics.CGRect(), topViewController.View, UIPopoverArrowDirection.Unknown, true);
+            popover.PresentFromRect(new CoreGraphics.CGRect(), topViewController.View, UIPopoverArrowDirection.Any, true);
         }
 
         public void Hide(Popup popup)

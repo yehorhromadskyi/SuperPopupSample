@@ -1,5 +1,6 @@
 ﻿using SuperPopupSample;
 using SuperPopupSample.UWP;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
@@ -8,83 +9,103 @@ namespace SuperPopupSample.UWP
 {
     public sealed class SuperFrameRenderer : ViewRenderer<ContentView, Windows.UI.Xaml.Controls.ContentControl>
     {
-        SuperFrame _superFrame;
-        Windows.UI.Xaml.Media.CompositeTransform _arrowTransform;
-        Windows.UI.Xaml.Controls.ContentControl _contentControl;
-        Windows.UI.Xaml.Shapes.Path _arrowPath;
+        SuperFrame superFrame;
+        Windows.UI.Xaml.Media.CompositeTransform arrowTransform;
+        Windows.UI.Xaml.Controls.ContentControl contentControl;
+        Windows.UI.Xaml.Shapes.Path arrowPath;
 
         protected override void OnElementChanged(ElementChangedEventArgs<ContentView> e)
         {
             if (e.OldElement != null)
             {
-                _superFrame.DrawArrowRequested -= OnDrawArrowRequest;
+                superFrame.DrawArrowRequested -= OnDrawArrowRequest;
 
-                _superFrame = null;
-                _arrowTransform = null;
-                _contentControl = null;
-                _arrowPath = null;
+                superFrame = null;
+                arrowTransform = null;
+                contentControl = null;
+                arrowPath = null;
             }
 
             if (e.NewElement != null)
             {
-                _superFrame = e.NewElement as SuperFrame;
+                superFrame = e.NewElement as SuperFrame;
 
-                _superFrame.DrawArrowRequested += OnDrawArrowRequest;
+                superFrame.DrawArrowRequested += OnDrawArrowRequest;
 
                 if (Control == null)
                 {
-                    _contentControl = new Windows.UI.Xaml.Controls.ContentControl();
+                    contentControl = new Windows.UI.Xaml.Controls.ContentControl();
 
                     var style = App.Current.Resources["ArrowedContentViewStyle"] as Windows.UI.Xaml.Style;
                     if (style != null)
                     {
-                        _contentControl.Style = style;
+                        contentControl.Style = style;
                     }
 
-                    SetNativeControl(_contentControl);
+                    SetNativeControl(contentControl);
                 }
             }
 
             base.OnElementChanged(e);
         }
 
-        private void OnDrawArrowRequest(object sender, ArrowOptions e)
+        private void OnDrawArrowRequest(object sender, EventArgs e)
         {
-            DrawArrow(e);
+            DrawArrow(sender as SuperFrame);
         }
 
-        private void DrawArrow(ArrowOptions options)
+        private void DrawArrow(SuperFrame frame)
         {
-            if (_arrowTransform == null || _arrowPath == null)
+            if (frame == null)
             {
-                _arrowPath = _contentControl.GetVisualChild<Windows.UI.Xaml.Shapes.Path>();
-                _arrowPath.Fill = new Windows.UI.Xaml.Media.SolidColorBrush(
+                return;
+            }
+
+            if (arrowTransform == null || arrowPath == null)
+            {
+                arrowPath = contentControl.GetVisualChild<Windows.UI.Xaml.Shapes.Path>();
+                arrowPath.Fill = new Windows.UI.Xaml.Media.SolidColorBrush(
                     Windows.UI.Color.FromArgb(
-                        (byte)(_superFrame.ArrowColor.A * 255),
-                        (byte)(_superFrame.ArrowColor.R * 255),
-                        (byte)(_superFrame.ArrowColor.G * 255),
-                        (byte)(_superFrame.ArrowColor.B * 255)));
-                _arrowTransform = _arrowPath.RenderTransform as Windows.UI.Xaml.Media.CompositeTransform;
+                        (byte)(superFrame.ArrowColor.A * 255),
+                        (byte)(superFrame.ArrowColor.R * 255),
+                        (byte)(superFrame.ArrowColor.G * 255),
+                        (byte)(superFrame.ArrowColor.B * 255)));
+                arrowTransform = arrowPath.RenderTransform as Windows.UI.Xaml.Media.CompositeTransform;
             }
 
             var angle = 0;
-            var x = options.Location.X - _superFrame.Width / 2;
-            var y = options.Location.Y - _superFrame.Height / 2;
+            var x = 0d;
+            var y = 0d;
 
-            switch (options.Direction)
+            switch (frame.HorizontalArrowAlignment)
+            {
+                case SuperPopupSample.HorizontalAlignment.Left:
+                    x = arrowPath.Width / 2;
+                    break;
+
+                case SuperPopupSample.HorizontalAlignment.Center:
+                    x = contentControl.Width / 2 - arrowPath.Width / 2;
+                    break;
+
+                case SuperPopupSample.HorizontalAlignment.Right:
+                    x = contentControl.Width - arrowPath.Width / 2;
+                    break;
+            }
+
+            switch (frame.ArrowDirection)
             {
                 case ArrowDirection.Up:
-                    y += _arrowPath.Width / 2;
+                    y += arrowPath.Width / 2;
                     break;
                 case ArrowDirection.Down:
-                    y -= _arrowPath.Width / 2;
+                    y -= arrowPath.Width / 2;
                     angle = 180;
                     break;
             }
 
-            _arrowTransform.Rotation = angle - 90;
-            _arrowTransform.TranslateX = x;
-            _arrowTransform.TranslateY = y;
+            arrowTransform.Rotation = angle - 90;
+            arrowTransform.TranslateX = x;
+            arrowTransform.TranslateY = y;
         }
     }
 }

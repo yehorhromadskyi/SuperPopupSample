@@ -9,15 +9,16 @@ namespace SuperPopupSample
         Down
     }
 
-    public class ArrowOptions
+    public enum HorizontalAlignment
     {
-        public Point Location { get; set; }
-        public ArrowDirection Direction { get; set; }
+        Left,
+        Center,
+        Right
     }
 
     public sealed class SuperFrame : Frame
     {
-        public event EventHandler<ArrowOptions> DrawArrowRequested;
+        public event EventHandler DrawArrowRequested;
 
         public static readonly BindableProperty ArrowColorProperty =
             BindableProperty.Create(nameof(ArrowColor),
@@ -25,15 +26,39 @@ namespace SuperPopupSample
                                     typeof(SuperFrame),
                                     Color.White);
 
+        public static readonly BindableProperty HorizontalArrowAlignmentProperty =
+            BindableProperty.Create(nameof(HorizontalArrowAlignment),
+                                    typeof(HorizontalAlignment),
+                                    typeof(SuperFrame),
+                                    default(HorizontalAlignment));
+
+        public static readonly BindableProperty ArrowDirectionProperty =
+            BindableProperty.Create(nameof(ArrowDirection),
+                                    typeof(ArrowDirection),
+                                    typeof(SuperFrame),
+                                    default(ArrowDirection));
+
         public Color ArrowColor
         {
             get { return (Color)GetValue(ArrowColorProperty); }
             set { SetValue(ArrowColorProperty, value); }
         }
 
-        public void DrawArrow(ArrowOptions request)
+        public HorizontalAlignment HorizontalArrowAlignment
         {
-            DrawArrowRequested?.Invoke(this, request);
+            get { return (HorizontalAlignment)GetValue(HorizontalArrowAlignmentProperty); }
+            set { SetValue(HorizontalArrowAlignmentProperty, value); }
+        }
+
+        public ArrowDirection ArrowDirection
+        {
+            get { return (ArrowDirection)GetValue(ArrowDirectionProperty); }
+            set { SetValue(ArrowDirectionProperty, value); }
+        }
+
+        public void DrawArrow()
+        {
+            DrawArrowRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

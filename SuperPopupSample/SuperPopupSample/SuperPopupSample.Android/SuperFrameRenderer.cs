@@ -13,7 +13,7 @@ namespace SuperPopupSample.Droid
         const double ArrowSize = 10;
 
         SuperFrame _superFrame;
-        ArrowOptions _arrowOptions;
+        ArrowPlacement _arrowOptions;
 
         protected override void OnElementChanged(ElementChangedEventArgs<Frame> e)
         {
@@ -35,12 +35,12 @@ namespace SuperPopupSample.Droid
             }
         }
 
-        void OnDrawArrowRequest(object sender, ArrowOptions request)
+        void OnDrawArrowRequest(object sender, ArrowPlacement request)
         {
             DrawArrow(request);
         }
 
-        void DrawArrow(ArrowOptions request)
+        void DrawArrow(ArrowPlacement request)
         {
             _arrowOptions = request;
         }
