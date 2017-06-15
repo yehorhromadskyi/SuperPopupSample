@@ -55,8 +55,8 @@
                           IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
                           Placement="BelowTargetAtCenter"
                           RequiredSize="200,100"
-                          HorizontalArrowAlignment="Left"
-                          ArrowDirection="Up"
+                          HorizontalArrowAlignment="Right"
+                          ArrowDirection="Down"
                           IsArrowVisible="True">
             <Frame BackgroundColor="White">
                 <Label Text="Popup"/>

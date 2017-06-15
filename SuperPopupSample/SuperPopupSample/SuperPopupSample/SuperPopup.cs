@@ -187,7 +187,6 @@ namespace SuperPopupSample
 
             _contentFrame = new SuperFrame
             {
-                ArrowColor = Color.Red,
                 Padding = new Thickness(0),
                 HasShadow = false,
                 Content = view

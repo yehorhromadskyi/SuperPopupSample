@@ -51,16 +51,11 @@ namespace SuperPopupSample.UWP
 
         private void OnDrawArrowRequest(object sender, EventArgs e)
         {
-            DrawArrow(sender as SuperFrame);
+            DrawArrow();
         }
 
-        private void DrawArrow(SuperFrame frame)
+        private void DrawArrow()
         {
-            if (frame == null)
-            {
-                return;
-            }
-
             if (arrowTransform == null || arrowPath == null)
             {
                 arrowPath = contentControl.GetVisualChild<Windows.UI.Xaml.Shapes.Path>();
@@ -77,28 +72,28 @@ namespace SuperPopupSample.UWP
             var x = 0d;
             var y = 0d;
 
-            switch (frame.HorizontalArrowAlignment)
+            switch (superFrame.HorizontalArrowAlignment)
             {
                 case SuperPopupSample.HorizontalAlignment.Left:
-                    x = arrowPath.Width / 2;
+                    x = arrowPath.Width * 1.5 - superFrame.Width / 2;
                     break;
 
                 case SuperPopupSample.HorizontalAlignment.Center:
-                    x = contentControl.Width / 2 - arrowPath.Width / 2;
+                    x = 0;
                     break;
 
                 case SuperPopupSample.HorizontalAlignment.Right:
-                    x = contentControl.Width - arrowPath.Width / 2;
+                    x = superFrame.Width / 2 - arrowPath.Width * 1.5;
                     break;
             }
 
-            switch (frame.ArrowDirection)
+            switch (superFrame.ArrowDirection)
             {
                 case ArrowDirection.Up:
-                    y += arrowPath.Width / 2;
+                    y = -superFrame.Height / 2 - arrowPath.Width / 2;
                     break;
                 case ArrowDirection.Down:
-                    y -= arrowPath.Width / 2;
+                    y = superFrame.Height / 2 + arrowPath.Width / 2;
                     angle = 180;
                     break;
             }
