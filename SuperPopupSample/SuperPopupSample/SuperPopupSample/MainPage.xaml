@@ -56,7 +56,7 @@
                           Placement="BelowTargetAtCenter"
                           RequiredSize="200,100"
                           HorizontalArrowAlignment="Left"
-                          ArrowDirection="Down"
+                          ArrowDirection="Up"
                           IsArrowVisible="True">
             <Frame BackgroundColor="White">
                 <Label Text="Popup"/>
