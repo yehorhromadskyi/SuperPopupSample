@@ -49,7 +49,7 @@ namespace SuperPopupSample.UWP
             base.OnElementChanged(e);
         }
 
-        private void OnDrawArrowRequest(object sender, EventArgs e)
+        private void OnDrawArrowRequest(object sender, EventArgs args)
         {
             DrawArrow();
         }
